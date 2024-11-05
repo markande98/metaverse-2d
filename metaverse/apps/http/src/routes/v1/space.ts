@@ -12,7 +12,6 @@ export const spaceRouter = Router();
 
 spaceRouter.post("/", userMiddleWare, async (req, res) => {
   const parsedData = createSpaceSchema.safeParse(req.body);
-
   if (!parsedData.success) {
     res.status(400).json({ message: "Validation failed" });
     return;
@@ -45,7 +44,6 @@ spaceRouter.post("/", userMiddleWare, async (req, res) => {
     res.status(400).json({ message: "Map not found" });
     return;
   }
-
   let space = await db.$transaction(async () => {
     const space = await db.space.create({
       data: {
@@ -66,6 +64,39 @@ spaceRouter.post("/", userMiddleWare, async (req, res) => {
     return space;
   });
   res.json({ spaceId: space.id });
+});
+
+spaceRouter.delete("/element", userMiddleWare, async (req, res) => {
+  console.log(req.body);
+  const parsedData = DeleteElementSchema.safeParse(req.body);
+
+  if (!parsedData.success) {
+    res.status(400).json({ message: "Validation failed" });
+    return;
+  }
+
+  const spaceElement = await db.spaceElements.findFirst({
+    where: {
+      id: parsedData.data.id,
+    },
+    include: {
+      space: true,
+    },
+  });
+
+  if (spaceElement?.space.creatorId !== req.userId) {
+    res.status(403).json({ message: "Unauthorized" });
+    return;
+  }
+
+  await db.spaceElements.delete({
+    where: {
+      id: parsedData.data.id,
+    },
+  });
+  res.json({
+    message: "Element deleted",
+  });
 });
 
 spaceRouter.delete("/:spaceId", userMiddleWare, async (req, res) => {
@@ -99,7 +130,7 @@ spaceRouter.get("/all", userMiddleWare, async (req, res) => {
     },
   });
   res.json({
-    space: spaces.map((s) => ({
+    spaces: spaces.map((s) => ({
       id: s.id,
       name: s.name,
       thumbnail: s.thumbnail,
@@ -131,6 +162,16 @@ spaceRouter.post("/element", userMiddleWare, async (req, res) => {
     return;
   }
 
+  if (
+    parsedData.data.x < 0 ||
+    parsedData.data.x > space.width ||
+    parsedData.data.y < 0 ||
+    parsedData.data.y > space.height
+  ) {
+    res.status(400).json({ message: "Invalid coordinates" });
+    return;
+  }
+
   await db.spaceElements.create({
     data: {
       elementId: parsedData.data.elementId,
@@ -141,38 +182,6 @@ spaceRouter.post("/element", userMiddleWare, async (req, res) => {
   });
 
   res.status(200).json({ message: "Element added to space" });
-});
-
-spaceRouter.delete("/element", userMiddleWare, async (req, res) => {
-  const parsedData = DeleteElementSchema.safeParse(req.body);
-
-  if (!parsedData.success) {
-    res.status(400).json({ message: "Validation failed" });
-    return;
-  }
-
-  const spaceElement = await db.spaceElements.findFirst({
-    where: {
-      id: parsedData.data.id,
-    },
-    include: {
-      space: true,
-    },
-  });
-
-  if (spaceElement?.space.creatorId !== req.userId) {
-    res.status(403).json({ message: "Unauthorized" });
-    return;
-  }
-
-  await db.spaceElements.delete({
-    where: {
-      id: parsedData.data.id,
-    },
-  });
-  res.json({
-    message: "Element deleted",
-  });
 });
 
 spaceRouter.get("/:spaceId", async (req, res) => {

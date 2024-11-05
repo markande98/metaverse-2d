@@ -1,26 +1,31 @@
 import { Router } from "express";
 import { updateMetadataSchema } from "../../types";
-import { useMiddleWare } from "../../middleware/user";
+import { userMiddleWare } from "../../middleware/user";
 import { db } from "@repo/db/client";
 
 export const userRouter = Router();
 
-userRouter.post("/metadata", useMiddleWare, async (req, res) => {
+userRouter.post("/metadata", userMiddleWare, async (req, res) => {
   const parsedData = updateMetadataSchema.safeParse(req.body);
   if (!parsedData.success) {
-    res.status(403).json({
+    res.status(400).json({
       message: "Validation failed",
     });
+    return;
   }
-  await db.user.update({
-    where: {
-      id: req.userId,
-    },
-    data: {
-      avatarId: parsedData.data?.avatarId,
-    },
-  });
-  res.status(200).json({ message: "Metadata updated!" });
+  try {
+    await db.user.update({
+      where: {
+        id: req.userId,
+      },
+      data: {
+        avatarId: parsedData.data?.avatarId,
+      },
+    });
+    res.status(200).json({ message: "Metadata updated!" });
+  } catch (e) {
+    res.status(400).json({ message: "Internal server error" });
+  }
 });
 
 userRouter.get("/metadata/bulk", async (req, res) => {

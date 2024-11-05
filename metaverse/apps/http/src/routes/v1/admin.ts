@@ -10,7 +10,9 @@ import { db } from "@repo/db/client";
 
 export const adminRouter = Router();
 
-adminRouter.post("/element", adminMiddleWare, async (req, res) => {
+adminRouter.use(adminMiddleWare);
+
+adminRouter.post("/element", async (req, res) => {
   const parsedData = CreateElementSchema.safeParse(req.body);
   if (!parsedData.success) {
     res.status(400).json({
@@ -32,7 +34,7 @@ adminRouter.post("/element", adminMiddleWare, async (req, res) => {
   });
 });
 
-adminRouter.put("/element/:elementId", adminMiddleWare, async (req, res) => {
+adminRouter.put("/element/:elementId", async (req, res) => {
   const parsedData = UpdateElementSchema.safeParse(req.body);
 
   if (!parsedData.success) {
@@ -47,9 +49,12 @@ adminRouter.put("/element/:elementId", adminMiddleWare, async (req, res) => {
       imageUrl: parsedData.data.imageUrl,
     },
   });
+  res.json({
+    message: "imageUrl updated!",
+  });
 });
 
-adminRouter.post("/avatar", adminMiddleWare, async (req, res) => {
+adminRouter.post("/avatar", async (req, res) => {
   const parsedData = CreateAvatarSchema.safeParse(req.body);
 
   if (!parsedData.success) {
@@ -67,7 +72,7 @@ adminRouter.post("/avatar", adminMiddleWare, async (req, res) => {
   });
 });
 
-adminRouter.post("/map", adminMiddleWare, async (req, res) => {
+adminRouter.post("/map", async (req, res) => {
   const parsedData = CreateMapSchema.safeParse(req.body);
   if (!parsedData.success) {
     res.status(400).json({ message: "Validation failed" });

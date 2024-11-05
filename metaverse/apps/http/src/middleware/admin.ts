@@ -23,6 +23,7 @@ export const adminMiddleWare = (
     };
     if (decoded.role !== "Admin") {
       res.status(403).json({ message: "Unauthorized" });
+      return;
     }
     req.userId = decoded.userId;
     next();
