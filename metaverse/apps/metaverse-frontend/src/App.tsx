@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import AuthForms from "./features/auth/auth-form";
 
 function App() {
   return (
     <div>
-      <Button>Click me</Button>
+      <AuthForms />
     </div>
   );
 }
