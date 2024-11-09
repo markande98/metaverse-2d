@@ -9,9 +9,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { signinSchema } from "@/features/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { FormError } from "../form.error";
+import { useAuth } from "../auth-provider";
+import { useNavigate } from "react-router-dom";
 export const SigninForm = () => {
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const { handleSignIn } = useAuth();
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof signinSchema>>({
     resolver: zodResolver(signinSchema),
     defaultValues: {
@@ -20,8 +28,19 @@ export const SigninForm = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof signinSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof signinSchema>) => {
+    setError("");
+    try {
+      setIsLoading(true);
+      await handleSignIn(values);
+      navigate("/");
+    } catch (e) {
+      if (e instanceof Error) {
+        setError(e.message);
+      }
+    } finally {
+      setIsLoading(false);
+    }
   };
   return (
     <Form {...form}>
@@ -34,7 +53,11 @@ export const SigninForm = () => {
               <FormItem className="space-y-2">
                 <FormLabel>Username</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="enter your username" />
+                  <Input
+                    {...field}
+                    placeholder="enter your username"
+                    disabled={isLoading}
+                  />
                 </FormControl>
               </FormItem>
             )}
@@ -46,13 +69,19 @@ export const SigninForm = () => {
               <FormItem className="space-y-2">
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input {...field} placeholder="******" type="password" />
+                  <Input
+                    {...field}
+                    placeholder="******"
+                    type="password"
+                    disabled={isLoading}
+                  />
                 </FormControl>
               </FormItem>
             )}
           />
         </div>
-        <Button type="submit" className="w-full">
+        <FormError message={error} />
+        <Button type="submit" className="w-full" disabled={isLoading}>
           sign in
         </Button>
       </form>
