@@ -1,13 +1,16 @@
 import { Router } from "express";
-import { userRouter } from "./user";
-import { spaceRouter } from "./space";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { compare, hash } from "../../script";
 import { adminRouter } from "./admin";
-import jwt from "jsonwebtoken";
-import { hash, compare } from "../../script";
+import { spaceRouter } from "./space";
+import { userRouter } from "./user";
 
 import { db } from "@repo/db/client";
+import { User } from "@prisma/client";
+import { userMiddleWare } from "../../middleware/user";
 import { signInSchema, signUpSchema } from "../../types";
-import { JWT_SECRET } from "../../config";
+import { ACCESS_TOKEN, JWT_SECRET, REFRESH_TOKEN } from "../../utils/config";
+import { generateAccessToken } from "../../utils/helper";
 
 export const router = Router();
 
@@ -34,9 +37,10 @@ router.post("/signup", async (req, res) => {
     });
 
     res.status(200).json({
-      userId: user.id,
+      user: user,
+      message: "User created!, try sign in",
     });
-  } catch (e) {
+  } catch {
     res.status(400).json({
       message: "User already exists",
     });
@@ -62,7 +66,7 @@ router.post("/signin", async (req, res) => {
     });
 
     if (!user) {
-      res.status(403).json({
+      res.status(400).json({
         message: "User not found",
       });
       return;
@@ -70,20 +74,26 @@ router.post("/signin", async (req, res) => {
 
     const isValid = await compare(password, user.password);
     if (!isValid) {
-      res.status(403).json({
+      res.status(400).json({
         message: "Invalid Password",
       });
       return;
     }
-    const token = jwt.sign(
-      {
-        userId: user.id,
-        role: user.role,
-      },
-      JWT_SECRET
-    );
+    const accessToken = generateAccessToken(user);
+    res.cookie(ACCESS_TOKEN, accessToken, {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+    });
+    const refreshToken = jwt.sign(user, JWT_SECRET, { expiresIn: "10s" });
+    res.cookie(REFRESH_TOKEN, refreshToken, {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+    });
     res.status(200).json({
-      token,
+      user,
+      message: "user logged in successfully",
     });
   } catch (e) {
     res.status(500).json({
@@ -113,6 +123,61 @@ router.get("/avatars", async (req, res) => {
       name: avatar.name,
     })),
   });
+});
+
+router.get("/generate-token", async (req, res) => {
+  const refreshToken: string = req.cookies["refreshToken"];
+  try {
+    if (!refreshToken) {
+      res.status(400).json({ message: "Verification Error" });
+      return;
+    }
+    const user = jwt.verify(refreshToken, JWT_SECRET) as JwtPayload as User;
+    const accessToken = generateAccessToken({
+      id: user.id,
+      username: user.username,
+      password: user.password,
+      avatarId: user.avatarId,
+      role: user.role,
+    });
+    res.cookie(ACCESS_TOKEN, accessToken, {
+      httpOnly: true,
+      secure: true,
+      path: "/",
+    });
+    res.status(200).json({ message: "Token refreshed successfully" });
+  } catch (e) {
+    res.status(400).json({
+      message: "Something went wrong!",
+    });
+  }
+});
+
+router.get("/current-user", userMiddleWare, async (req, res) => {
+  const userId = req.userId;
+  try {
+    const user = await db.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+    if (!user) {
+      res.status(400).json({
+        message: "user not found",
+      });
+      return;
+    }
+    res.status(200).json({
+      id: user.id,
+      username: user.username,
+      role: user.role,
+      avatarId: user.avatarId,
+    });
+  } catch (e) {
+    res.status(400).json({
+      message: "user not found",
+    });
+  }
 });
 
 router.use("/user", userRouter);

@@ -1,34 +1,32 @@
+import { User } from "@prisma/client";
+
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config";
+import { JWT_SECRET } from "../utils/config";
 import { NextFunction, Request, Response } from "express";
 
-export const adminMiddleWare = (
+export const adminMiddleWare = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const header = req.headers["authorization"];
-  const token = header?.split(" ")[1];
+  const accessToken = req.cookies["accessToken"];
 
-  if (!token) {
+  if (!accessToken) {
     res.status(403).json({
       message: "Unauthorized",
     });
     return;
   }
   try {
-    const decoded = jwt.verify(token, JWT_SECRET) as {
-      role: string;
-      userId: string;
-    };
+    const decoded = jwt.verify(accessToken, JWT_SECRET) as User;
     if (decoded.role !== "Admin") {
       res.status(403).json({ message: "Unauthorized" });
       return;
     }
-    req.userId = decoded.userId;
+    req.userId = decoded.id;
     next();
   } catch (e) {
-    res.status(401).json({ message: "Unauthorized" });
+    res.status(403).json({ message: "Unauthorized" });
     return;
   }
 };
