@@ -15,6 +15,8 @@ import { z } from "zod";
 import { FormError } from "../form.error";
 import { useAuth } from "../auth-provider";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+
 export const SigninForm = () => {
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -34,6 +36,7 @@ export const SigninForm = () => {
       setIsLoading(true);
       await handleSignIn(values);
       navigate("/");
+      toast("Signed In!");
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);

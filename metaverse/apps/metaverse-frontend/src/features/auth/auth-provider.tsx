@@ -11,6 +11,7 @@ type AuthContextType = {
   handleSignUp: (
     values: z.infer<typeof signupSchema>
   ) => Promise<AxiosResponse>;
+  handleLogout: () => Promise<AxiosResponse>;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,11 +45,22 @@ export default function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const handleLogout = async () => {
+    try {
+      const res = await customAxios.post("/signout");
+      return res;
+    } catch (e) {
+      console.log(e);
+      throw e;
+    }
+  };
+
   return (
     <AuthContext.Provider
       value={{
         handleSignIn,
         handleSignUp,
+        handleLogout,
       }}
     >
       {children}
