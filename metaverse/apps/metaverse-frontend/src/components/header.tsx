@@ -1,6 +1,7 @@
-import { UserProfile } from "@/features/auth/user-profile";
 import { useScrollTop } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
+import { Navigation } from "./navigation";
+import { UserProfile } from "@/features/auth/components/user-profile";
 
 export const Header = () => {
   const scrolled = useScrollTop();
@@ -13,14 +14,18 @@ export const Header = () => {
     >
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          <div className="flex items-center">
+          <div className="flex items-center space-x-10">
             <div className="flex-shrink-0">
-              <img
-                src="/images/zep.png"
-                alt="Logo"
-                className="h-10 w-10 rounded"
-              />
+              <div className="flex justify-between items-center gap-x-2">
+                <img
+                  src="/images/zep.png"
+                  alt="Logo"
+                  className="h-10 w-10 rounded"
+                />
+                <p className="font-extrabold text-2xl text-blue-600">ZEP</p>
+              </div>
             </div>
+            <Navigation />
           </div>
           <div className="flex items-center space-x-4">
             <UserProfile />

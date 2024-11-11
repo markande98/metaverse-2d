@@ -18,6 +18,10 @@ export type currentUserType = {
   role: roleType;
 };
 
+export const spaceJoinSchema = z.object({
+  spaceId: z.string().min(6),
+});
+
 enum roleType {
   User,
   Admin,

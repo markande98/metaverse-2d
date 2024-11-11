@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { SigninForm } from "./components/signin-form";
-import { SignupForm } from "./components/signup-form";
+import { SigninForm } from "./signin-form";
+import { SignupForm } from "./signup-form";
 
 const AuthForms = () => {
   return (

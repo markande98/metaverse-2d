@@ -7,40 +7,36 @@ import {
   FormLabel,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { signupSchema } from "@/features/types";
+import { signinSchema } from "@/features/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useAuth } from "../auth-provider";
-import { FormError } from "../form.error";
-import { FormSuccess } from "../form-succes";
-export const SignupForm = () => {
-  const [error, setError] = useState<string | undefined>("");
-  const [succes, setSucces] = useState<string | undefined>("");
+import { useAuth } from "./auth-provider";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { FormError } from "./components/form.error";
+
+export const SigninForm = () => {
+  const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { handleSignUp } = useAuth();
-  const form = useForm<z.infer<typeof signupSchema>>({
-    resolver: zodResolver(signupSchema),
+  const { handleSignIn } = useAuth();
+  const navigate = useNavigate();
+  const form = useForm<z.infer<typeof signinSchema>>({
+    resolver: zodResolver(signinSchema),
     defaultValues: {
       username: "",
       password: "",
-      confirmPassword: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof signupSchema>) => {
+  const onSubmit = async (values: z.infer<typeof signinSchema>) => {
     setError("");
-    setSucces("");
-    const { password, confirmPassword } = values;
-    if (password !== confirmPassword) {
-      setError("Confirm Password didn't match, try again!");
-      return;
-    }
     try {
       setIsLoading(true);
-      const res = await handleSignUp(values);
-      setSucces(res.data.message);
+      await handleSignIn(values);
+      navigate("/");
+      toast("Signed In!");
     } catch (e) {
       if (e instanceof Error) {
         setError(e.message);
@@ -86,28 +82,10 @@ export const SignupForm = () => {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="confirmPassword"
-            render={({ field }) => (
-              <FormItem className="space-y-2">
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input
-                    {...field}
-                    placeholder="******"
-                    type="password"
-                    disabled={isLoading}
-                  />
-                </FormControl>
-              </FormItem>
-            )}
-          />
         </div>
         <FormError message={error} />
-        <FormSuccess message={succes} />
         <Button type="submit" className="w-full" disabled={isLoading}>
-          sign up
+          sign in
         </Button>
       </form>
     </Form>

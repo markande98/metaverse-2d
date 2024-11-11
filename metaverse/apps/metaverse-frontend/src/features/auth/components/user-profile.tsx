@@ -8,12 +8,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 import { Button } from "@/components/ui/button";
-import { useCurrentUser } from "./hooks/use-current-user";
 import { ChevronDown, ChevronUp, LogOut } from "lucide-react";
 import { useState } from "react";
-import { useAuth } from "./auth-provider";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { useCurrentUser } from "../hooks/use-current-user";
+import { useAuth } from "../auth-provider";
 
 export const UserProfile = () => {
   const [open, setOpen] = useState(false);
