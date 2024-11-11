@@ -85,7 +85,7 @@ router.post("/signin", async (req, res) => {
       secure: true,
       path: "/",
     });
-    const refreshToken = jwt.sign(user, JWT_SECRET, { expiresIn: "10s" });
+    const refreshToken = jwt.sign(user, JWT_SECRET, { expiresIn: "1d" });
     res.cookie(REFRESH_TOKEN, refreshToken, {
       httpOnly: true,
       secure: true,
@@ -100,6 +100,24 @@ router.post("/signin", async (req, res) => {
       message: "Internal server error",
     });
   }
+});
+
+router.post("/signout", async (req, res) => {
+  res.cookie(ACCESS_TOKEN, "", {
+    httpOnly: true,
+    secure: true,
+    path: "/",
+    expires: new Date(0),
+  });
+  res.cookie(REFRESH_TOKEN, "", {
+    httpOnly: true,
+    secure: true,
+    path: "/",
+    expires: new Date(0),
+  });
+  res.status(200).json({
+    message: "successfully logged out",
+  });
 });
 
 router.get("/elements", async (req, res) => {
