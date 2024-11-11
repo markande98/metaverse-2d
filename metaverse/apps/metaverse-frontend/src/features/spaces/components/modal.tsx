@@ -1,10 +1,13 @@
 import { X } from "lucide-react";
-import { useModal } from "../hooks/use-modal";
-import { SpaceJoinForm } from "../space-join-form";
 
-const Modal = () => {
-  const { isOpen, onClose } = useModal();
+interface ModalProps {
+  isOpen?: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  children: React.ReactNode;
+}
 
+const Modal = ({ isOpen, onClose, children }: ModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -24,10 +27,11 @@ const Modal = () => {
           </button>
 
           {/* Modal content */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h2 className="text-xl font-semibold">Enter with code</h2>
             <SpaceJoinForm />
-          </div>
+          </div> */}
+          {children}
         </div>
       </div>
     </div>

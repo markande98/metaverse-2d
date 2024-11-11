@@ -22,6 +22,13 @@ export const spaceJoinSchema = z.object({
   spaceId: z.string().min(6),
 });
 
+export const createSpaceSchema = z.object({
+  name: z.string(),
+  height: z.number().min(20, "To low!").max(100, "To high!"),
+  width: z.number().min(20, "To low!").max(100, "To high!"),
+  mapId: z.string().optional(),
+});
+
 enum roleType {
   User,
   Admin,
