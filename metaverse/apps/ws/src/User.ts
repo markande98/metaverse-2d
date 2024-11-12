@@ -5,24 +5,14 @@ import { db } from "@repo/db/client";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from "./config";
 
-function generateRandomId(length: number) {
-  const res = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  let ans = "";
-
-  for (let i = 0; i < length; i++) {
-    ans += res.charAt(Math.floor(Math.random() * res.length));
-  }
-  return ans;
-}
-
 export class User {
-  public id: string;
   private spaceId?: string;
-  private userId?: string;
   private x: number;
   private y: number;
-  constructor(private ws: WebSocket) {
-    this.id = generateRandomId(10);
+  constructor(
+    private ws: WebSocket,
+    public id: string
+  ) {
     this.x = 0;
     this.y = 0;
     this.initHandlers();
@@ -35,51 +25,56 @@ export class User {
         case "join":
           const spaceId = parsedData.payload.spaceId;
           const token = parsedData.payload.token;
-          const userId = (jwt.verify(token, JWT_SECRET) as JwtPayload).userId;
-          this.userId = userId;
-          if (!this.userId) {
-            this.ws.close();
-            return;
-          }
-          const space = await db.space.findFirst({
-            where: {
-              id: spaceId,
-            },
-          });
-          if (!space) {
-            this.ws.close();
-            return;
-          }
-          this.spaceId = spaceId;
-          RoomManager.getInstance().addUser(spaceId, this);
-          this.x = Math.floor(Math.random() * space.width);
-          this.y = Math.floor(Math.random() * space.width);
-          this.send({
-            type: "space-joined",
-            payload: {
-              spawn: {
-                x: this.x,
-                y: this.y,
+          try {
+            const userId = (jwt.verify(token, JWT_SECRET) as JwtPayload).id;
+            this.id = userId;
+            if (!this.id) {
+              this.ws.close();
+              return;
+            }
+            const space = await db.space.findFirst({
+              where: {
+                id: spaceId,
               },
-              users:
-                RoomManager.getInstance()
-                  .rooms.get(spaceId)
-                  ?.filter((x) => x.id !== this.id)
-                  ?.map((u) => ({ id: u.id })) ?? [],
-            },
-          });
-          RoomManager.getInstance().broadcast(
-            {
-              type: "user-joined",
+            });
+            if (!space) {
+              this.ws.close();
+              return;
+            }
+            this.spaceId = spaceId;
+            RoomManager.getInstance().addUser(spaceId, this);
+            this.x = Math.floor(Math.random() * space.width) + 2;
+            this.y = Math.floor(Math.random() * space.width) + 2;
+            this.send({
+              type: "space-joined",
               payload: {
-                x: this.x,
-                y: this.y,
-                userId: this.userId,
+                spawn: {
+                  x: this.x,
+                  y: this.y,
+                },
+                userId: this.id,
+                users:
+                  RoomManager.getInstance()
+                    .rooms.get(spaceId)
+                    ?.filter((x) => x.id !== this.id)
+                    ?.map((u) => ({ userId: u.id, x: u.x, y: u.y })) ?? [],
               },
-            },
-            this,
-            this.spaceId!
-          );
+            });
+            RoomManager.getInstance().broadcast(
+              {
+                type: "user-joined",
+                payload: {
+                  x: this.x,
+                  y: this.y,
+                  userId: this.id,
+                },
+              },
+              this,
+              this.spaceId!
+            );
+          } catch (e: any) {
+            console.log(e.message);
+          }
           break;
         case "move":
           const moveX = parsedData.payload.x;
@@ -95,6 +90,7 @@ export class User {
                 payload: {
                   x: this.x,
                   y: this.y,
+                  userId: this.id,
                 },
               },
               this,
@@ -118,7 +114,7 @@ export class User {
       {
         type: "user-left",
         payload: {
-          userId: this.userId,
+          userId: this.id,
         },
       },
       this,
