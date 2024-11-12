@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import AuthForms from "./features/auth/auth-form";
 import AuthProvider from "./features/auth/auth-provider";
 import { Dashboard } from "./components/dashboard";
+import { SpaceRoom } from "./features/spaces/space-room";
 
 const router = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: <Dashboard />,
+  },
+  {
+    path: "/space/:spaceId",
+    element: <SpaceRoom />,
   },
 ]);
 

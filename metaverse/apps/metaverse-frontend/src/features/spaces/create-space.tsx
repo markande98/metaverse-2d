@@ -1,7 +1,4 @@
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { createSpaceSchema } from "../types";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -11,14 +8,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { customAxios } from "@/lib/api";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useCallback, useState } from "react";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { z } from "zod";
+import { createSpaceSchema } from "../types";
 import { useCreateSpaceModal } from "./hooks/use-create-space-modal";
 
 export const CreateSpace = () => {
   const [isLoading, setIsloading] = useState(false);
   const { onClose } = useCreateSpaceModal();
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof createSpaceSchema>>({
     resolver: zodResolver(createSpaceSchema),
     defaultValues: {
@@ -27,26 +29,27 @@ export const CreateSpace = () => {
       height: 20,
     },
   });
-
   const onSubmit = useCallback(
     async (values: z.infer<typeof createSpaceSchema>) => {
       try {
         setIsloading(true);
         const { name, width, height } = values;
         const dimensions = `${width.toString()}x${height.toString()}`;
-        await customAxios.post("/space", {
+        const res = await customAxios.post("/space", {
           name,
           dimensions,
         });
+        const spaceId = res.data.spaceId;
         form.reset();
         onClose();
+        navigate(`/space/${spaceId}`);
       } catch (e) {
         console.log(e);
       } finally {
         setIsloading(false);
       }
     },
-    [form, onClose]
+    [form, onClose, navigate]
   );
 
   return (
