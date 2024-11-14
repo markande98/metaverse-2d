@@ -5,11 +5,16 @@ import AuthForms from "./features/auth/auth-form";
 import AuthProvider from "./features/auth/auth-provider";
 import { Dashboard } from "./components/dashboard";
 import { SpaceRoom } from "./features/spaces/space-room";
+import { Admin } from "./features/admin/admin";
 
 const router = createBrowserRouter([
   {
     path: "/auth",
     element: <AuthForms />,
+  },
+  {
+    path: "/admin",
+    element: <Admin />,
   },
   {
     path: "/",

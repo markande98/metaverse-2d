@@ -34,6 +34,16 @@ adminRouter.post("/element", async (req, res) => {
   });
 });
 
+adminRouter.get("/element", async (req, res) => {
+  try {
+    const elements = await db.element.findMany();
+
+    res.status(200).json(elements);
+  } catch {
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
 adminRouter.put("/element/:elementId", async (req, res) => {
   const parsedData = UpdateElementSchema.safeParse(req.body);
 

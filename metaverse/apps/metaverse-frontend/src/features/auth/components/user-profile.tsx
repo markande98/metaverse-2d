@@ -36,7 +36,6 @@ export const UserProfile = () => {
       console.log(e);
     }
   };
-
   return (
     <DropdownMenu onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger>

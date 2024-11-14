@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { LogOut, Plus } from "lucide-react";
-import Modal from "./components/modal";
 import { SpaceJoinForm } from "./space-join-form";
 import { useSpaceJoinModal } from "./hooks/use-space-join-modal";
 import { useCreateSpaceModal } from "./hooks/use-create-space-modal";
 import { CreateSpace } from "./create-space";
 import { MySpace } from "./my-space";
+import Modal from "@/components/modal";
 
 export const Spaces = () => {
   const spaceJoinModal = useSpaceJoinModal();

@@ -87,7 +87,7 @@ export const SpaceRoomView = ({
     };
   }, [spaceId, token]);
   return (
-    <Card className="p-4 w-fit">
+    <Card className="p-4 w-fit min-h-screen">
       <div className="space-y-4">
         <div className="text-sm text-gray-500">Spacename: {spaceName}</div>
         <canvas

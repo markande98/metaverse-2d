@@ -31,6 +31,17 @@ export const createSpaceSchema = z.object({
   mapId: z.string().optional(),
 });
 
+export const createElementSchema = z.object({
+  width: z.number().min(1, "greater than one").max(5, "smaller than five"),
+  height: z.number().min(1, "greater than one").max(5, "smaller than five"),
+  imageUrl: z.string(),
+  static: z.boolean(),
+});
+
+export const updateElementSchema = z.object({
+  imageUrl: z.string(),
+});
+
 type userInfoType = Omit<User, "password">;
 type spaceElementInfoType = Pick<SpaceElements, "id" | "x" | "y">;
 
@@ -55,6 +66,8 @@ interface space {
 export type getUserOwnSpaces = Pick<space, "id" | "name" | "thumbnail"> & {
   dimensions: string;
 };
+
+export type getAdminElementSchema = Element[];
 
 enum roleType {
   User,

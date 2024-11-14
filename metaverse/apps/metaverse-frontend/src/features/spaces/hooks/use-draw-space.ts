@@ -20,8 +20,8 @@ export const useDrawSpace = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [position, setPosition] = useState({ x: xPos, y: yPos });
   // Constants for map and avatar
-  const MAP_WIDTH = 1000;
-  const MAP_HEIGHT = 735;
+  const MAP_WIDTH = height * 20;
+  const MAP_HEIGHT = width * 20;
   const AVATAR_SIZE = 20;
   const MOVE_SPEED = 20;
   // Handle keyboard controls

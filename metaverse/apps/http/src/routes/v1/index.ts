@@ -11,6 +11,9 @@ import { userMiddleWare } from "../../middleware/user";
 import { signInSchema, signUpSchema } from "../../types";
 import { ACCESS_TOKEN, JWT_SECRET, REFRESH_TOKEN } from "../../utils/config";
 import { generateAccessToken } from "../../utils/helper";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const router = Router();
 
@@ -28,11 +31,14 @@ router.post("/signup", async (req, res) => {
     const { username, password, type } = parsedData.data;
 
     const hashedPassword = await hash(password);
+    const isAdmin =
+      username === process.env.ADMIN_USER &&
+      password === process.env.ADMIN_SECRET;
     const user = await db.user.create({
       data: {
         username,
         password: hashedPassword,
-        role: type === "admin" ? "Admin" : "User",
+        role: isAdmin ? "Admin" : type === "admin" ? "Admin" : "User",
       },
     });
 

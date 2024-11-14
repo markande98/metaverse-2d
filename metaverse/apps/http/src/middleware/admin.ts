@@ -10,19 +10,21 @@ export const adminMiddleWare = async (
   next: NextFunction
 ) => {
   const accessToken = req.cookies["accessToken"];
-
   if (!accessToken) {
     res.status(403).json({
       message: "Unauthorized",
     });
     return;
   }
+
   try {
     const decoded = jwt.verify(accessToken, JWT_SECRET) as User;
     if (decoded.role !== "Admin") {
+      console.log("reached-4");
       res.status(403).json({ message: "Unauthorized" });
       return;
     }
+
     req.userId = decoded.id;
     next();
   } catch (e) {
