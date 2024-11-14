@@ -67,7 +67,6 @@ spaceRouter.post("/", userMiddleWare, async (req, res) => {
 });
 
 spaceRouter.delete("/element", userMiddleWare, async (req, res) => {
-  console.log(req.body);
   const parsedData = DeleteElementSchema.safeParse(req.body);
 
   if (!parsedData.success) {
@@ -195,6 +194,7 @@ spaceRouter.get("/:spaceId", async (req, res) => {
           element: true,
         },
       },
+      creator: true,
     },
   });
 
@@ -203,6 +203,9 @@ spaceRouter.get("/:spaceId", async (req, res) => {
     return;
   }
   res.json({
+    name: space.name,
+    thumbnail: space.thumbnail,
+    creator: space.creator,
     dimensions: `${space.width}x${space.height}`,
     elements: space.elements.map((e) => ({
       id: e.id,

@@ -1,5 +1,6 @@
 import z from "zod";
 import { Element, Space, SpaceElements, User } from "@prisma/client";
+import { Omit, Pick } from "@prisma/client/runtime/library";
 
 export const signupSchema = z.object({
   username: z.string(),
@@ -43,6 +44,16 @@ export type spaceInfoWithCreatorAndElements = Pick<
     {
       element: Element;
     }[];
+};
+
+interface space {
+  id: string;
+  name: string;
+  thumbnail: string;
+}
+
+export type getUserOwnSpaces = Pick<space, "id" | "name" | "thumbnail"> & {
+  dimensions: string;
 };
 
 enum roleType {

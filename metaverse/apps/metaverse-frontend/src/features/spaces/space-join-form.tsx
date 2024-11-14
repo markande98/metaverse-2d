@@ -11,8 +11,12 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { useSpaceJoinModal } from "./hooks/use-space-join-modal";
 
 export const SpaceJoinForm = () => {
+  const navigate = useNavigate();
+  const { onClose } = useSpaceJoinModal();
   const form = useForm<z.infer<typeof spaceJoinSchema>>({
     resolver: zodResolver(spaceJoinSchema),
     defaultValues: {
@@ -21,7 +25,10 @@ export const SpaceJoinForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof spaceJoinSchema>) => {
-    console.log(values);
+    const { spaceId } = values;
+    onClose();
+    form.reset();
+    navigate(`/space/${spaceId}`);
   };
 
   return (

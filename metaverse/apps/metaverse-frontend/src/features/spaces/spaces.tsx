@@ -5,12 +5,13 @@ import { SpaceJoinForm } from "./space-join-form";
 import { useSpaceJoinModal } from "./hooks/use-space-join-modal";
 import { useCreateSpaceModal } from "./hooks/use-create-space-modal";
 import { CreateSpace } from "./create-space";
+import { MySpace } from "./my-space";
 
 export const Spaces = () => {
   const spaceJoinModal = useSpaceJoinModal();
   const createSpaceModal = useCreateSpaceModal();
   return (
-    <>
+    <div className="min-h-screen">
       <Modal
         isOpen={spaceJoinModal.isOpen}
         onOpen={spaceJoinModal.onOpen}
@@ -25,7 +26,8 @@ export const Spaces = () => {
       >
         <CreateSpace />
       </Modal>
-      <div className="w-full pt-16 flex items-center justify-end">
+      <div className="w-full pt-16 flex items-center justify-between">
+        <p className="text-xl font-semibold text-muted-foreground">My Spaces</p>
         <div className="flex items-center justify-between gap-x-2">
           <Button
             variant="outline"
@@ -45,6 +47,7 @@ export const Spaces = () => {
           </Button>
         </div>
       </div>
-    </>
+      <MySpace />
+    </div>
   );
 };

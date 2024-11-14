@@ -1,7 +1,6 @@
+import { UserProfile } from "@/features/auth/components/user-profile";
 import { useScrollTop } from "@/hooks/use-scroll";
 import { cn } from "@/lib/utils";
-import { Navigation } from "./navigation";
-import { UserProfile } from "@/features/auth/components/user-profile";
 
 export const Header = () => {
   const scrolled = useScrollTop();
@@ -25,7 +24,6 @@ export const Header = () => {
                 <p className="font-extrabold text-2xl text-blue-600">ZEP</p>
               </div>
             </div>
-            <Navigation />
           </div>
           <div className="flex items-center space-x-4">
             <UserProfile />

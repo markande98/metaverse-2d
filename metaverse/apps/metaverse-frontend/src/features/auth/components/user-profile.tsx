@@ -29,8 +29,7 @@ export const UserProfile = () => {
 
   const onSignOut = async () => {
     try {
-      const res = await handleLogout();
-      console.log(res.data);
+      await handleLogout();
       navigate("/auth");
       toast("Signed out!");
     } catch (e) {

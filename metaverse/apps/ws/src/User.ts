@@ -11,7 +11,8 @@ export class User {
   private y: number;
   constructor(
     private ws: WebSocket,
-    public id: string
+    public id: string,
+    public username: string
   ) {
     this.x = 0;
     this.y = 0;
@@ -26,8 +27,9 @@ export class User {
           const spaceId = parsedData.payload.spaceId;
           const token = parsedData.payload.token;
           try {
-            const userId = (jwt.verify(token, JWT_SECRET) as JwtPayload).id;
-            this.id = userId;
+            const user = jwt.verify(token, JWT_SECRET) as JwtPayload;
+            this.username = user.username;
+            this.id = user.id;
             if (!this.id) {
               this.ws.close();
               return;
@@ -53,11 +55,17 @@ export class User {
                   y: this.y,
                 },
                 userId: this.id,
+                username: this.username,
                 users:
                   RoomManager.getInstance()
                     .rooms.get(spaceId)
                     ?.filter((x) => x.id !== this.id)
-                    ?.map((u) => ({ userId: u.id, x: u.x, y: u.y })) ?? [],
+                    ?.map((u) => ({
+                      userId: u.id,
+                      x: u.x,
+                      y: u.y,
+                      username: u.username,
+                    })) ?? [],
               },
             });
             RoomManager.getInstance().broadcast(
@@ -67,6 +75,7 @@ export class User {
                   x: this.x,
                   y: this.y,
                   userId: this.id,
+                  username: this.username,
                 },
               },
               this,
@@ -91,6 +100,7 @@ export class User {
                   x: this.x,
                   y: this.y,
                   userId: this.id,
+                  username: this.username,
                 },
               },
               this,

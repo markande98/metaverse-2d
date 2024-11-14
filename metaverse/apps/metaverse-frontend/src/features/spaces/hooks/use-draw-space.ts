@@ -5,17 +5,23 @@ export const useDrawSpace = ({
   yPos,
   users,
   handleMove,
+  height,
+  width,
+  currentUserName,
 }: {
   xPos: number;
   yPos: number;
   users: any;
   handleMove: (x: number, y: number) => void;
+  height: number;
+  width: number;
+  currentUserName: string;
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [position, setPosition] = useState({ x: xPos, y: yPos });
   // Constants for map and avatar
-  const MAP_WIDTH = 700;
-  const MAP_HEIGHT = 700;
+  const MAP_WIDTH = 1000;
+  const MAP_HEIGHT = 735;
   const AVATAR_SIZE = 20;
   const MOVE_SPEED = 20;
   // Handle keyboard controls
@@ -26,22 +32,22 @@ export const useDrawSpace = ({
 
         switch (e.key) {
           case "ArrowUp":
-            newPos.y = Math.max(0, prev.y - MOVE_SPEED);
+            newPos.y = Math.max(20, prev.y - MOVE_SPEED);
             handleMove(newPos.x, newPos.y);
 
             break;
           case "ArrowDown":
-            newPos.y = Math.min(MAP_HEIGHT, prev.y + MOVE_SPEED);
+            newPos.y = Math.min(MAP_HEIGHT - 20, prev.y + MOVE_SPEED);
             handleMove(newPos.x, newPos.y);
 
             break;
           case "ArrowLeft":
-            newPos.x = Math.max(0, prev.x - MOVE_SPEED);
+            newPos.x = Math.max(20, prev.x - MOVE_SPEED);
             handleMove(newPos.x, newPos.y);
 
             break;
           case "ArrowRight":
-            newPos.x = Math.min(MAP_WIDTH, prev.x + MOVE_SPEED);
+            newPos.x = Math.min(MAP_WIDTH - 20, prev.x + MOVE_SPEED);
             handleMove(newPos.x, newPos.y);
 
             break;
@@ -52,7 +58,7 @@ export const useDrawSpace = ({
     setPosition({ x: xPos, y: yPos });
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [xPos, yPos, handleMove]);
+  }, [xPos, yPos, handleMove, MAP_HEIGHT, MAP_WIDTH]);
 
   // Draw the map and avatar
   useEffect(() => {
@@ -86,7 +92,12 @@ export const useDrawSpace = ({
         ctx.lineTo(MAP_WIDTH, y);
         ctx.stroke();
       }
-
+      ctx.font = "16px Mono";
+      ctx.fillStyle = "white";
+      ctx.strokeStyle = "black";
+      ctx.lineWidth = 5;
+      ctx.strokeText(currentUserName, position.x - 20, position.y - 15);
+      ctx.fillText(currentUserName, position.x - 20, position.y - 15);
       // Draw avatar
       ctx.beginPath();
       ctx.arc(position.x, position.y, AVATAR_SIZE / 2, 0, Math.PI * 2);
@@ -101,6 +112,13 @@ export const useDrawSpace = ({
         if (!user.x) {
           return;
         }
+        ctx.font = "16px Mono";
+        ctx.fillStyle = "white";
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 5;
+        ctx.strokeText(user.username, user.x * 20 - 20, user.y * 20 - 15);
+        ctx.fillText(user.username, user.x * 20 - 20, user.y * 20 - 15);
+
         ctx.beginPath();
         ctx.arc(user.x * 20, user.y * 20, AVATAR_SIZE / 2, 0, Math.PI * 2);
         ctx.fillStyle = "#4ECDC4";
@@ -110,7 +128,7 @@ export const useDrawSpace = ({
         ctx.stroke();
       });
     }
-  }, [position, users]);
+  }, [position, users, MAP_HEIGHT, MAP_WIDTH, currentUserName]);
 
   return {
     canvasRef,

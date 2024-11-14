@@ -29,6 +29,7 @@ export const handleWebSocketMessage = (
             x: message.payload.x,
             y: message.payload.y,
             userId: message.payload.userId,
+            username: message.payload.username,
           });
         }
         return newUsers;
@@ -43,8 +44,23 @@ export const handleWebSocketMessage = (
             x: message.payload.x,
             y: message.payload.y,
             userId: message.payload.userId,
+            username: message.payload.username,
           });
         }
+        return newUsers;
+      });
+      break;
+    case "movement-rejected":
+      setCurrentUser((prev) => ({
+        ...prev,
+        x: message.payload.x,
+        y: message.payload.y,
+      }));
+      break;
+    case "user-left":
+      setUsers((prev) => {
+        const newUsers = new Map(prev);
+        newUsers.delete(message.payload.userId);
         return newUsers;
       });
       break;

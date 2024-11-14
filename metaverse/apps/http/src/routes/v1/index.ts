@@ -173,6 +173,7 @@ router.get("/generate-token", async (req, res) => {
 
 router.get("/current-user", userMiddleWare, async (req, res) => {
   const userId = req.userId;
+  const accessToken = req.cookies["accessToken"];
   try {
     const user = await db.user.findUnique({
       where: {
@@ -190,6 +191,7 @@ router.get("/current-user", userMiddleWare, async (req, res) => {
       username: user.username,
       role: user.role,
       avatarId: user.avatarId,
+      token: accessToken,
     });
   } catch (e) {
     res.status(400).json({
