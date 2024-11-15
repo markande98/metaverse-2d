@@ -82,6 +82,16 @@ adminRouter.post("/avatar", async (req, res) => {
   });
 });
 
+adminRouter.get("/avatar", async (req, res) => {
+  try {
+    const avatars = await db.avatar.findMany();
+
+    res.status(200).json(avatars);
+  } catch {
+    res.status(500).json({ message: "something went wrong" });
+  }
+});
+
 adminRouter.post("/map", async (req, res) => {
   const parsedData = CreateMapSchema.safeParse(req.body);
   if (!parsedData.success) {

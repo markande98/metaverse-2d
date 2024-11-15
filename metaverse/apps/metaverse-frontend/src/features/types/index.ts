@@ -1,5 +1,5 @@
 import z from "zod";
-import { Element, Space, SpaceElements, User } from "@prisma/client";
+import { Avatar, Element, Space, SpaceElements, User } from "@prisma/client";
 import { Omit, Pick } from "@prisma/client/runtime/library";
 
 export const signupSchema = z.object({
@@ -38,6 +38,11 @@ export const createElementSchema = z.object({
   static: z.boolean(),
 });
 
+export const createAvatarSchema = z.object({
+  imageUrl: z.string(),
+  name: z.string(),
+});
+
 export const updateElementSchema = z.object({
   imageUrl: z.string(),
 });
@@ -68,6 +73,7 @@ export type getUserOwnSpaces = Pick<space, "id" | "name" | "thumbnail"> & {
 };
 
 export type getAdminElementSchema = Element[];
+export type getAdminAvatarSchema = Avatar[];
 
 enum roleType {
   User,

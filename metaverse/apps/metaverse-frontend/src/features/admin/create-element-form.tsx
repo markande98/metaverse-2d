@@ -16,8 +16,10 @@ import { useState } from "react";
 import { customAxios } from "@/lib/api";
 import { useCreateElementModal } from "./hooks/use-create-element";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CreateSpaceForm = () => {
+  const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
   const { onClose } = useCreateElementModal();
   const form = useForm<z.infer<typeof createElementSchema>>({
@@ -36,6 +38,7 @@ export const CreateSpaceForm = () => {
       await customAxios.post("/admin/element", values);
       onClose();
       toast("Element created");
+      await queryClient.refetchQueries({ queryKey: ["admin-element"] });
     } catch (e) {
       console.log(e);
     } finally {
