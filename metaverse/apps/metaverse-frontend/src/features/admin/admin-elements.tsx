@@ -13,19 +13,17 @@ export const AdminElements = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <UpdateElementForm />
       </Modal>
-      <div className="pt-20 flex items-center flex-wrap justify-between">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {elements?.map((element) => (
-            <ElementCard
-              key={element.id}
-              id={element.id}
-              width={element.width}
-              height={element.height}
-              isStatic={element.static}
-              imageUrl={element.imageUrl}
-            />
-          ))}
-        </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-10">
+        {elements?.map((element) => (
+          <ElementCard
+            key={element.id}
+            id={element.id}
+            width={element.width}
+            height={element.height}
+            isStatic={element.static}
+            imageUrl={element.imageUrl}
+          />
+        ))}
       </div>
     </>
   );

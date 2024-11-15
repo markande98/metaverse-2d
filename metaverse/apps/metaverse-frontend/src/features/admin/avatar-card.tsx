@@ -8,7 +8,7 @@ interface AvatarCardProps {
 export const AvatarCard = ({ name, imageUrl }: AvatarCardProps) => {
   return (
     <Card className="hover:shadow-lg transition-shadow duration-300 cursor-pointer">
-      <CardContent className="p-0 flex items-center justify-center">
+      <CardContent className="flex p-4 items-center justify-center">
         <img src={imageUrl} alt="avatar" width={90} height={50} />
       </CardContent>
       <CardFooter className="p-2 flex-col space-y-2">

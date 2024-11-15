@@ -25,13 +25,8 @@ export const ElementCard = ({
       onClick={() => onClick(id, imageUrl)}
       className="hover:shadow-lg transition-shadow duration-300 cursor-pointer"
     >
-      <CardContent className="p-0 flex items-center justify-center">
-        <img
-          src={imageUrl}
-          alt="element"
-          width={width * 50}
-          height={height * 50}
-        />
+      <CardContent className="flex p-4 items-center justify-center">
+        <img src={imageUrl} alt="element" width={50} height={50} />
       </CardContent>
       <CardFooter className="p-2 flex-col space-y-2">
         <p className="font-sm w-full text-muted-foreground text-xs text-start">
