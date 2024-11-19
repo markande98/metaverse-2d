@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { useCreateMapModal } from "../hooks/use-create-map";
 import { CreateMapForm } from "../create-map-form";
+import { AdminMaps } from "../admin-maps";
 
 export const Map = () => {
   const { isOpen, onClose, onOpen } = useCreateMapModal();
@@ -22,6 +23,7 @@ export const Map = () => {
             <span>Create Map</span>
           </Button>
         </div>
+        <AdminMaps />
       </div>
     </>
   );

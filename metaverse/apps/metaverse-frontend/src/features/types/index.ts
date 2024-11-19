@@ -1,5 +1,13 @@
 import z from "zod";
-import { Avatar, Element, Space, SpaceElements, User } from "@prisma/client";
+import {
+  Avatar,
+  Element,
+  Map,
+  MapElements,
+  Space,
+  SpaceElements,
+  User,
+} from "@prisma/client";
 import { Omit, Pick } from "@prisma/client/runtime/library";
 
 export const signupSchema = z.object({
@@ -87,6 +95,14 @@ export type getUserOwnSpaces = Pick<space, "id" | "name" | "thumbnail"> & {
 
 export type getAdminElementSchema = Element[];
 export type getAdminAvatarSchema = Avatar[];
+
+type mapWithElements = MapElements & {
+  element: Element;
+};
+
+export type getMapElements = Map & {
+  mapElements: mapWithElements[];
+};
 
 enum roleType {
   User,

@@ -88,7 +88,25 @@ adminRouter.get("/avatar", async (req, res) => {
 
     res.status(200).json(avatars);
   } catch {
-    res.status(500).json({ message: "something went wrong" });
+    res.status(500).json({ message: "something went wrong!" });
+  }
+});
+
+adminRouter.get("/map", async (req, res) => {
+  try {
+    const maps = await db.map.findMany({
+      include: {
+        mapElements: {
+          include: {
+            element: true,
+          },
+        },
+      },
+    });
+
+    res.status(200).json(maps);
+  } catch {
+    res.status(500).json({ message: "something went wrong!" });
   }
 });
 
