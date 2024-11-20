@@ -45,8 +45,8 @@ export class User {
             }
             this.spaceId = spaceId;
             RoomManager.getInstance().addUser(spaceId, this);
-            this.x = Math.floor(Math.random() * space.width) + 2;
-            this.y = Math.floor(Math.random() * space.width) + 2;
+            this.x = Math.floor(Math.random() * space.width);
+            this.y = Math.floor(Math.random() * space.width);
             this.send({
               type: "space-joined",
               payload: {
@@ -93,6 +93,15 @@ export class User {
           if ((xD == 1 && yD == 0) || yD == 1 || xD == 0) {
             this.x = moveX;
             this.y = moveY;
+            this.send({
+              type: "user-movement",
+              payload: {
+                x: this.x,
+                y: this.y,
+                userId: this.id,
+                username: this.username,
+              },
+            });
             RoomManager.getInstance().broadcast(
               {
                 type: "movement",

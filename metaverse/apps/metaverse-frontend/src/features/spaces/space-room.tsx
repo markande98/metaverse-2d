@@ -27,16 +27,14 @@ export const SpaceRoom = () => {
 
   const height = Number(space?.dimensions.split("x")[0]);
   const width = Number(space?.dimensions.split("x")[1]);
-  const currentUserName = user.username;
   return (
     <SpaceRoomView
       spaceId={spaceId!}
       token={token}
-      creatorId={space?.creator.id}
       width={width}
       height={height}
       spaceName={space?.name}
-      currentUserName={currentUserName}
+      currentUsername={user.username}
     />
   );
 };

@@ -3,16 +3,18 @@ import React from "react";
 export const handleWebSocketMessage = (
   message: any,
   setCurrentUser: React.Dispatch<
-    React.SetStateAction<{ x: number; y: number; userId: string }>
+    React.SetStateAction<{
+      x: number;
+      y: number;
+    }>
   >,
   setUsers: React.Dispatch<React.SetStateAction<any>>
 ) => {
   switch (message.type) {
     case "space-joined":
       setCurrentUser({
-        x: message.payload.spawn.x * 20,
-        y: message.payload.spawn.y * 20,
-        userId: message.payload.userId,
+        x: message.payload.spawn.x,
+        y: message.payload.spawn.y,
       });
 
       const userMap = new Map();
@@ -62,6 +64,12 @@ export const handleWebSocketMessage = (
         const newUsers = new Map(prev);
         newUsers.delete(message.payload.userId);
         return newUsers;
+      });
+      break;
+    case "user-movement":
+      setCurrentUser({
+        x: message.payload.x,
+        y: message.payload.y,
       });
       break;
   }
