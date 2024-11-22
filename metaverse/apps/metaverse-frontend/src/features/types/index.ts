@@ -96,7 +96,7 @@ export type getUserOwnSpaces = Pick<space, "id" | "name" | "thumbnail"> & {
 export type getAdminElementSchema = Element[];
 export type getAdminAvatarSchema = Avatar[];
 
-type mapWithElements = MapElements & {
+export type mapWithElements = MapElements & {
   element: Element;
 };
 

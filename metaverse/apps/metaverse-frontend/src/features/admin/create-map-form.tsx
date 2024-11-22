@@ -17,12 +17,14 @@ import { z } from "zod";
 import { createMapSchema } from "../types";
 import { useCreateMapModal } from "./hooks/use-create-map";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const CreateMapForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [x, setX] = useState(0);
   const [y, setY] = useState(0);
   const { onClose } = useCreateMapModal();
+  const queryClient = useQueryClient();
   const [elementId, setElementId] = useState("");
   const [countAdded, setCountAdded] = useState(0);
 
@@ -43,13 +45,14 @@ export const CreateMapForm = () => {
         await customAxios.post("/admin/map", values);
         onClose();
         toast("map created!");
+        await queryClient.refetchQueries({ queryKey: ["admin-map"] });
       } catch (e) {
         console.log(e);
       } finally {
         setIsLoading(false);
       }
     },
-    [onClose]
+    [onClose, queryClient]
   );
 
   return (
