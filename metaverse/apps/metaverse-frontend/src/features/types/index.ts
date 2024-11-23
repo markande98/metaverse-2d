@@ -26,6 +26,8 @@ export type currentUserType = {
   username: string;
   avatarId?: string;
   role: roleType;
+  token: string;
+  avatar: Avatar;
 };
 
 export const spaceJoinSchema = z.object({

@@ -22,10 +22,12 @@ import { useCallback, useState } from "react";
 import { useAvatarModal } from "../hooks/use-avatar-update";
 import { customAxios } from "@/lib/api";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const AvatarUpdateForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { onClose } = useAvatarModal();
+  const queryClient = useQueryClient();
   const avatars = useGetAvatar();
   const form = useForm<z.infer<typeof updateAvatarSchema>>({
     resolver: zodResolver(updateAvatarSchema),
@@ -41,13 +43,14 @@ export const AvatarUpdateForm = () => {
         await customAxios.post("/user/metadata", values);
         onClose();
         toast("avatar updated!");
+        await queryClient.refetchQueries({ queryKey: ["current-user"] });
       } catch (e) {
         console.log(e);
       } finally {
         setIsLoading(false);
       }
     },
-    [onClose]
+    [onClose, queryClient]
   );
   return (
     <Form {...form}>

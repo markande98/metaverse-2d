@@ -38,6 +38,7 @@ export const UserProfile = () => {
       console.log(e);
     }
   };
+
   return (
     <DropdownMenu onOpenChange={handleOpenChange}>
       <DropdownMenuTrigger>
@@ -46,9 +47,17 @@ export const UserProfile = () => {
           className="flex border-none justify-between shadow-none"
           variant="outline"
         >
-          <div className="bg-blue-300 rounded-full h-8 w-8 flex justify-center items-center">
-            {firstLetter}
-          </div>
+          {data?.avatar.imageUrl ? (
+            <img
+              src={data.avatar.imageUrl}
+              alt="user-avatar"
+              className="h-8 w-8 rounded-full"
+            />
+          ) : (
+            <div className="bg-blue-300 rounded-full h-8 w-8 flex justify-center items-center">
+              {firstLetter}
+            </div>
+          )}
           <span>{open ? <ChevronDown /> : <ChevronUp />}</span>
         </Button>
       </DropdownMenuTrigger>
