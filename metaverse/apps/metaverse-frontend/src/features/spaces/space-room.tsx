@@ -36,6 +36,7 @@ export const SpaceRoom = () => {
       spaceName={space?.name}
       currentUsername={user?.username}
       spaceElements={space.elements}
+      currentUserAvatar={user?.avatar.imageUrl}
     />
   );
 };

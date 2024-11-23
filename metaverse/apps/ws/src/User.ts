@@ -4,18 +4,25 @@ import { OutgoingMessage } from "./types";
 import { db } from "@repo/db/client";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { JWT_SECRET } from "./config";
+import { isElementPresent } from "./lib/helper";
 
 export class User {
   private spaceId?: string;
   private x: number;
   private y: number;
+  private spaceElements: number[];
+  private spaceWidth: number;
   constructor(
     private ws: WebSocket,
     public id: string,
-    public username: string
+    public username: string,
+    public userAvatar: string | null
   ) {
     this.x = 0;
     this.y = 0;
+    this.spaceElements = [];
+    this.spaceWidth = 0;
+    this.userAvatar = null;
     this.initHandlers();
   }
 
@@ -28,8 +35,22 @@ export class User {
           const token = parsedData.payload.token;
           try {
             const user = jwt.verify(token, JWT_SECRET) as JwtPayload;
+            let updatedUser = await db.user.findUnique({
+              where: {
+                id: user.id,
+              },
+            });
+            let avatar;
+            if (updatedUser?.avatarId) {
+              avatar = await db.avatar.findUnique({
+                where: { id: updatedUser.avatarId },
+              });
+            }
             this.username = user.username;
             this.id = user.id;
+            if (avatar?.imageUrl) {
+              this.userAvatar = avatar.imageUrl;
+            }
             if (!this.id) {
               this.ws.close();
               return;
@@ -38,12 +59,19 @@ export class User {
               where: {
                 id: spaceId,
               },
+              include: {
+                elements: true,
+              },
             });
             if (!space) {
               this.ws.close();
               return;
             }
             this.spaceId = spaceId;
+            this.spaceWidth = space.width;
+            space.elements.forEach((se) => {
+              this.spaceElements.push(se.x * space.width + se.y);
+            });
             RoomManager.getInstance().addUser(spaceId, this);
             this.x = Math.floor(Math.random() * space.width);
             this.y = Math.floor(Math.random() * space.width);
@@ -65,6 +93,7 @@ export class User {
                       x: u.x,
                       y: u.y,
                       username: u.username,
+                      userAvatar: u.userAvatar,
                     })) ?? [],
               },
             });
@@ -76,6 +105,7 @@ export class User {
                   y: this.y,
                   userId: this.id,
                   username: this.username,
+                  userAvatar: this.userAvatar,
                 },
               },
               this,
@@ -86,44 +116,61 @@ export class User {
           }
           break;
         case "move":
-          const moveX = parsedData.payload.x;
-          const moveY = parsedData.payload.y;
-          const xD = Math.abs(this.x - moveX);
-          const yD = Math.abs(this.y - moveY);
-          if ((xD == 1 && yD == 0) || yD == 1 || xD == 0) {
-            this.x = moveX;
-            this.y = moveY;
-            this.send({
-              type: "user-movement",
-              payload: {
-                x: this.x,
-                y: this.y,
-                userId: this.id,
-                username: this.username,
-              },
-            });
-            RoomManager.getInstance().broadcast(
-              {
-                type: "movement",
+          try {
+            const moveX = parsedData.payload.x;
+            const moveY = parsedData.payload.y;
+            // check for the element
+            await isElementPresent(
+              moveX * this.spaceWidth + moveY,
+              this.spaceElements
+            );
+            // check for the other user
+            const index = RoomManager.getInstance()
+              .rooms.get(this.spaceId!)
+              ?.filter((u) => u.id !== this.id)
+              .findIndex((u) => u.x === moveX && u.y === moveY);
+
+            if (index !== -1) throw new Error("Other user is already present!");
+            const xD = Math.abs(this.x - moveX);
+            const yD = Math.abs(this.y - moveY);
+            if ((xD == 1 && yD == 0) || yD == 1 || xD == 0) {
+              this.x = moveX;
+              this.y = moveY;
+              this.send({
+                type: "user-movement",
                 payload: {
                   x: this.x,
                   y: this.y,
                   userId: this.id,
                   username: this.username,
+                  userAvatar: this.userAvatar,
                 },
+              });
+              RoomManager.getInstance().broadcast(
+                {
+                  type: "movement",
+                  payload: {
+                    x: this.x,
+                    y: this.y,
+                    userId: this.id,
+                    username: this.username,
+                    userAvatar: this.userAvatar,
+                  },
+                },
+                this,
+                this.spaceId!
+              );
+            }
+          } catch {
+            this.send({
+              type: "movement-rejected",
+              payload: {
+                x: this.x,
+                y: this.y,
               },
-              this,
-              this.spaceId!
-            );
-            return;
+            });
           }
-          this.send({
-            type: "movement-rejected",
-            payload: {
-              x: this.x,
-              y: this.y,
-            },
-          });
+          break;
       }
     });
   }

@@ -14,6 +14,7 @@ interface SpaceRoomViewProps {
   spaceName?: string;
   currentUsername?: string;
   spaceElements: spaceElementsInfo[];
+  currentUserAvatar?: string | null;
 }
 
 export const SpaceRoomView = ({
@@ -24,6 +25,7 @@ export const SpaceRoomView = ({
   spaceName,
   currentUsername,
   spaceElements,
+  currentUserAvatar,
 }: SpaceRoomViewProps) => {
   const wsRef = useRef<WebSocket | null>(null);
   const [users, setUsers] = useState(new Map());
@@ -114,6 +116,7 @@ export const SpaceRoomView = ({
           currentUserName={currentUsername}
           users={users}
           spaceElements={spaceElements}
+          currentUserAvatar={currentUserAvatar}
         />
       </div>
     </Card>

@@ -38,6 +38,8 @@ spaceRouter.post("/", userMiddleWare, async (req, res) => {
       mapElements: true,
       width: true,
       height: true,
+      name: true,
+      thumbnail: true,
     },
   });
   if (!map) {
@@ -47,10 +49,11 @@ spaceRouter.post("/", userMiddleWare, async (req, res) => {
   let space = await db.$transaction(async () => {
     const space = await db.space.create({
       data: {
-        name: parsedData.data.name,
+        name: map.name,
         width: map.width,
         height: map.height,
         creatorId: req.userId!,
+        thumbnail: map.thumbnail,
       },
     });
     await db.spaceElements.createMany({
@@ -113,13 +116,23 @@ spaceRouter.delete("/:spaceId", userMiddleWare, async (req, res) => {
     res.status(403).json({ message: "Unauthorized" });
     return;
   }
-
-  await db.space.delete({
-    where: {
-      id: req.params.spaceId,
-    },
-  });
-  res.json({ message: "space deleted" });
+  try {
+    await db.$transaction(async () => {
+      await db.spaceElements.deleteMany({
+        where: {
+          spaceId: req.params.spaceId,
+        },
+      });
+      await db.space.delete({
+        where: {
+          id: req.params.spaceId,
+        },
+      });
+    });
+    res.json({ message: "space deleted" });
+  } catch {
+    res.status(500).json({ message: "error occured!" });
+  }
 });
 
 spaceRouter.get("/all", userMiddleWare, async (req, res) => {
@@ -181,6 +194,17 @@ spaceRouter.post("/element", userMiddleWare, async (req, res) => {
   });
 
   res.status(200).json({ message: "Element added to space" });
+});
+
+spaceRouter.get("/maps", async (req, res) => {
+  try {
+    const maps = await db.map.findMany();
+    res.status(200).json(maps);
+  } catch {
+    res.status(500).json({
+      message: "Something went wrong",
+    });
+  }
 });
 
 spaceRouter.get("/:spaceId", async (req, res) => {

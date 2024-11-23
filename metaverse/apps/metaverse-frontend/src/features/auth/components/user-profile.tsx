@@ -47,7 +47,7 @@ export const UserProfile = () => {
           className="flex border-none justify-between shadow-none"
           variant="outline"
         >
-          {data?.avatar.imageUrl ? (
+          {data?.avatar?.imageUrl ? (
             <img
               src={data.avatar.imageUrl}
               alt="user-avatar"

@@ -185,6 +185,9 @@ router.get("/current-user", userMiddleWare, async (req, res) => {
       where: {
         id: userId,
       },
+      include: {
+        avatar: true,
+      },
     });
     if (!user) {
       res.status(400).json({
@@ -197,6 +200,7 @@ router.get("/current-user", userMiddleWare, async (req, res) => {
       username: user.username,
       role: user.role,
       avatarId: user.avatarId,
+      avatar: user.avatar,
       token: accessToken,
     });
   } catch (e) {

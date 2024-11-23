@@ -8,6 +8,7 @@ interface SpaceGridProps {
   currentUserName?: string;
   users: Map<string, any>;
   spaceElements: spaceElementsInfo[];
+  currentUserAvatar?: string | null;
 }
 
 export const SpaceGrid = ({
@@ -18,10 +19,12 @@ export const SpaceGrid = ({
   currentUserName,
   users,
   spaceElements,
+  currentUserAvatar,
 }: SpaceGridProps) => {
   const renderGrid = () => {
     const otherUsersPos: number[] = [];
     const otherUsersName: string[] = [];
+    const otherUsersAvatar: string[] = [];
     const elements: number[] = [];
     spaceElements.forEach((me) => {
       elements.push(me.x * width + me.y);
@@ -31,6 +34,7 @@ export const SpaceGrid = ({
     users.forEach((user) => {
       otherUsersPos.push(user.x * width + user.y);
       otherUsersName.push(user.username);
+      otherUsersAvatar.push(user.userAvatar);
     });
 
     for (let x = 0; x < width; x++) {
@@ -42,6 +46,10 @@ export const SpaceGrid = ({
           otherUsersName[
             otherUsersPos.findIndex((val) => val === x * width + y)
           ];
+        const otherUserAvatar =
+          otherUsersAvatar[
+            otherUsersPos.findIndex((val) => val === x * width + y)
+          ];
         const isElement = elements.includes(x * width + y);
         const spaceElement = spaceElements.find(
           (se) => se.x === x && se.y === y
@@ -51,18 +59,34 @@ export const SpaceGrid = ({
           <div key={`${x}-${y}`} className={cellClass}>
             {isUser && (
               <div className="flex justify-center items-center relative">
-                <p className="text-sm text-muted-foreground absolute bg-gray-200 z-10 shadow-md -top-8 rounded-lg p-1">
+                <p className="text-sm text-muted-foreground absolute bg-gray-200 shadow-md -top-8 rounded-lg p-1">
                   {currentUserName}
                 </p>
-                <div className="w-4 h-4 rounded-full bg-red-400 z-20" />
+                {currentUserAvatar ? (
+                  <img
+                    className="w-8 h-8 rounded-full"
+                    src={currentUserAvatar}
+                    alt="user-avatar"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-red-400" />
+                )}
               </div>
             )}
             {isOtherUser && (
               <div className="flex justify-center items-center relative">
-                <p className="text-sm text-muted-foreground absolute bg-gray-200 z-10 shadow-md -top-8 rounded-lg p-1">
+                <p className="text-sm text-muted-foreground absolute bg-gray-200 shadow-md -top-8 rounded-lg p-1">
                   {isOtherUser && otherUser}
                 </p>
-                <div className="w-4 h-4 rounded-full bg-red-400 z-20" />
+                {otherUserAvatar ? (
+                  <img
+                    className="w-8 h-8 rounded-full"
+                    src={otherUserAvatar}
+                    alt="other-user-avatar"
+                  />
+                ) : (
+                  <div className="w-8 h-8 rounded-full bg-red-400" />
+                )}
               </div>
             )}
             {isElement && (

@@ -32,6 +32,7 @@ export const handleWebSocketMessage = (
             y: message.payload.y,
             userId: message.payload.userId,
             username: message.payload.username,
+            userAvatar: message.payload.userAvatar,
           });
         }
         return newUsers;
@@ -47,6 +48,7 @@ export const handleWebSocketMessage = (
             y: message.payload.y,
             userId: message.payload.userId,
             username: message.payload.username,
+            userAvatar: message.payload.userAvatar,
           });
         }
         return newUsers;
