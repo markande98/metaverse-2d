@@ -2,6 +2,7 @@ import { Card } from "@/components/ui/card";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SpaceGrid } from "./space-grid";
 import { handleWebSocketMessage } from "./lib/handle-web-socket-message";
+import { spaceElementsInfo } from "../types";
 
 const WS_URL = "ws://localhost:3001";
 
@@ -11,7 +12,8 @@ interface SpaceRoomViewProps {
   height: number;
   width: number;
   spaceName?: string;
-  currentUsername: string;
+  currentUsername?: string;
+  spaceElements: spaceElementsInfo[];
 }
 
 export const SpaceRoomView = ({
@@ -21,6 +23,7 @@ export const SpaceRoomView = ({
   width,
   spaceName,
   currentUsername,
+  spaceElements,
 }: SpaceRoomViewProps) => {
   const wsRef = useRef<WebSocket | null>(null);
   const [users, setUsers] = useState(new Map());
@@ -31,7 +34,6 @@ export const SpaceRoomView = ({
     x: 0,
     y: 0,
   });
-
   useEffect(() => {
     wsRef.current = new WebSocket(WS_URL);
 
@@ -111,6 +113,7 @@ export const SpaceRoomView = ({
           currentUserY={currentUser.y}
           currentUserName={currentUsername}
           users={users}
+          spaceElements={spaceElements}
         />
       </div>
     </Card>

@@ -5,9 +5,9 @@ import { SpaceRoomView } from "./space-room-view";
 import { useEffect, useState } from "react";
 
 export const SpaceRoom = () => {
-  const [token, setToken] = useState(null);
+  const [token, setToken] = useState("");
   const { spaceId } = useParams();
-  const { isError, space, isPending } = useGetSpace(spaceId);
+  const { isError, space } = useGetSpace(spaceId);
   const user = useCurrentUser();
   useEffect(() => {
     if (user?.token) {
@@ -15,7 +15,7 @@ export const SpaceRoom = () => {
     }
   }, [user?.token]);
 
-  if (isError || isPending)
+  if (isError || space === undefined)
     return (
       <div className="min-h-screen flex justify-center">
         <p className="text-3xl text-muted-foreground text-slate-400 pt-16">
@@ -34,7 +34,8 @@ export const SpaceRoom = () => {
       width={width}
       height={height}
       spaceName={space?.name}
-      currentUsername={user.username}
+      currentUsername={user?.username}
+      spaceElements={space.elements}
     />
   );
 };

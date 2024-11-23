@@ -14,12 +14,14 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import { useCurrentUser } from "../hooks/use-current-user";
 import { useAuth } from "../auth-provider";
+import { useAvatarModal } from "../hooks/use-avatar-update";
 
 export const UserProfile = () => {
   const [open, setOpen] = useState(false);
   const data = useCurrentUser();
   const { handleLogout } = useAuth();
   const navigate = useNavigate();
+  const { onOpen } = useAvatarModal();
 
   const firstLetter = data?.username.toUpperCase()[0];
 
@@ -53,12 +55,22 @@ export const UserProfile = () => {
       <DropdownMenuContent>
         <DropdownMenuLabel>{data?.username}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>{data?.role}</DropdownMenuItem>
-        <DropdownMenuItem>spaces</DropdownMenuItem>
+        <DropdownMenuItem className="text-muted-foreground text-xs">
+          {data?.role}
+        </DropdownMenuItem>
+        <DropdownMenuItem className="text-muted-foreground text-xs">
+          spaces
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => onOpen()}
+          className="text-muted-foreground text-xs cursor-pointer"
+        >
+          Avatar update
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={onSignOut}
-          className="flex items-center gap-x-2"
+          className="flex items-center gap-x-2 cursor-pointer"
         >
           <LogOut />
           <p className="font-bold text-red-400">Sign out</p>

@@ -16,8 +16,11 @@ import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 import { createSpaceSchema } from "../types";
 import { useCreateSpaceModal } from "./hooks/use-create-space-modal";
+import { Separator } from "@/components/ui/separator";
+import { AvailableMaps } from "./available-maps";
 
 export const CreateSpace = () => {
+  const [mapId, setMapId] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const { onClose } = useCreateSpaceModal();
   const navigate = useNavigate();
@@ -27,6 +30,7 @@ export const CreateSpace = () => {
       name: "",
       width: 20,
       height: 20,
+      mapId,
     },
   });
   const onSubmit = useCallback(
@@ -38,6 +42,7 @@ export const CreateSpace = () => {
         const res = await customAxios.post("/space", {
           name,
           dimensions,
+          mapId,
         });
         const spaceId = res.data.spaceId;
         form.reset();
@@ -49,7 +54,7 @@ export const CreateSpace = () => {
         setIsloading(false);
       }
     },
-    [form, onClose, navigate]
+    [form, onClose, navigate, mapId]
   );
 
   return (
@@ -114,6 +119,14 @@ export const CreateSpace = () => {
                 )}
               />
             </div>
+            <div className="w-full relative flex items-center justify-center">
+              <Separator className="z-10" />
+              <span className="absolute text-xl z-50 bg-white w-8 text-center">
+                Or
+              </span>
+            </div>
+            <h2 className="text-xl font-semibold">Choose Map</h2>
+            <AvailableMaps mapId={mapId} setMapId={setMapId} />
             <Button variant="blue" className="w-full" type="submit">
               create
             </Button>

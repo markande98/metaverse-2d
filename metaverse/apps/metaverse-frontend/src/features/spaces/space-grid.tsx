@@ -1,10 +1,13 @@
+import { spaceElementsInfo } from "../types";
+
 interface SpaceGridProps {
   width: number;
   height: number;
   currentUserX: number;
   currentUserY: number;
-  currentUserName: string;
+  currentUserName?: string;
   users: Map<string, any>;
+  spaceElements: spaceElementsInfo[];
 }
 
 export const SpaceGrid = ({
@@ -14,10 +17,15 @@ export const SpaceGrid = ({
   currentUserY,
   currentUserName,
   users,
+  spaceElements,
 }: SpaceGridProps) => {
   const renderGrid = () => {
     const otherUsersPos: number[] = [];
     const otherUsersName: string[] = [];
+    const elements: number[] = [];
+    spaceElements.forEach((me) => {
+      elements.push(me.x * width + me.y);
+    });
     const grid = [];
 
     users.forEach((user) => {
@@ -34,6 +42,10 @@ export const SpaceGrid = ({
           otherUsersName[
             otherUsersPos.findIndex((val) => val === x * width + y)
           ];
+        const isElement = elements.includes(x * width + y);
+        const spaceElement = spaceElements.find(
+          (se) => se.x === x && se.y === y
+        );
         const cellClass = `w-8 h-8 border border-gray-200 flex items-center justify-center`;
         row.push(
           <div key={`${x}-${y}`} className={cellClass}>
@@ -52,6 +64,13 @@ export const SpaceGrid = ({
                 </p>
                 <div className="w-4 h-4 rounded-full bg-red-400 z-20" />
               </div>
+            )}
+            {isElement && (
+              <img
+                src={spaceElement?.element.imageUrl}
+                alt="element"
+                className="w-8 h-8"
+              />
             )}
           </div>
         );

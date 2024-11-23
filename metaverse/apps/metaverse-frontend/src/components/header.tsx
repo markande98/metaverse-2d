@@ -7,7 +7,7 @@ export const Header = () => {
   return (
     <header
       className={cn(
-        "fixed top-0 left-0 right-0 bg-white z-50",
+        "fixed top-0 left-0 right-0 bg-white z-40",
         scrolled && "border-b shadow-md"
       )}
     >

@@ -1,4 +1,3 @@
-import z from "zod";
 import {
   Avatar,
   Element,
@@ -9,6 +8,7 @@ import {
   User,
 } from "@prisma/client";
 import { Omit, Pick } from "@prisma/client/runtime/library";
+import z from "zod";
 
 export const signupSchema = z.object({
   username: z.string(),
@@ -50,6 +50,9 @@ export const createAvatarSchema = z.object({
   imageUrl: z.string(),
   name: z.string(),
 });
+export const updateAvatarSchema = z.object({
+  avatarId: z.string(),
+});
 
 export const createMapSchema = z.object({
   thumbnail: z.string(),
@@ -69,7 +72,10 @@ export const updateElementSchema = z.object({
 });
 
 type userInfoType = Omit<User, "password">;
-type spaceElementInfoType = Pick<SpaceElements, "id" | "x" | "y">;
+
+export type spaceElementsInfo = SpaceElements & {
+  element: Element;
+};
 
 export type spaceInfoWithCreatorAndElements = Pick<
   Space,
@@ -77,10 +83,7 @@ export type spaceInfoWithCreatorAndElements = Pick<
 > & {
   creator: userInfoType;
   dimensions: string;
-  elements: spaceElementInfoType &
-    {
-      element: Element;
-    }[];
+  elements: spaceElementsInfo[];
 };
 
 interface space {
