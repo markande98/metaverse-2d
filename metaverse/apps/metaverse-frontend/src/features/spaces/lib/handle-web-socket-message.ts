@@ -1,3 +1,4 @@
+import { MessageType } from "@/features/types";
 import React from "react";
 
 export const handleWebSocketMessage = (
@@ -8,7 +9,8 @@ export const handleWebSocketMessage = (
       y: number;
     }>
   >,
-  setUsers: React.Dispatch<React.SetStateAction<any>>
+  setUsers: React.Dispatch<React.SetStateAction<any>>,
+  setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>
 ) => {
   switch (message.type) {
     case "space-joined":
@@ -22,6 +24,11 @@ export const handleWebSocketMessage = (
         userMap.set(user.userId, user);
       });
       setUsers(userMap);
+      const msg: MessageType[] = [];
+      message.payload.messages.forEach((m: MessageType) => {
+        msg.push(m);
+      });
+      setMessages(msg);
       break;
     case "user-joined":
       setUsers((prev) => {
@@ -36,6 +43,19 @@ export const handleWebSocketMessage = (
           });
         }
         return newUsers;
+      });
+      break;
+    case "message":
+      setMessages((prev) => {
+        const newMessages = [
+          ...prev,
+          {
+            username: message.payload.username,
+            userAvatar: message.payload.userAvatar,
+            message: message.payload.message,
+          },
+        ];
+        return newMessages;
       });
       break;
     case "movement":

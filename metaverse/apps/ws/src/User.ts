@@ -10,7 +10,6 @@ export class User {
   private spaceId?: string;
   private x: number;
   private y: number;
-  private spaceElements: number[];
   private spaceWidth: number;
   constructor(
     private ws: WebSocket,
@@ -20,7 +19,6 @@ export class User {
   ) {
     this.x = 0;
     this.y = 0;
-    this.spaceElements = [];
     this.spaceWidth = 0;
     this.userAvatar = null;
     this.initHandlers();
@@ -69,9 +67,6 @@ export class User {
             }
             this.spaceId = spaceId;
             this.spaceWidth = space.width;
-            space.elements.forEach((se) => {
-              this.spaceElements.push(se.x * space.width + se.y);
-            });
             RoomManager.getInstance().addUser(spaceId, this);
             this.x = Math.floor(Math.random() * space.width);
             this.y = Math.floor(Math.random() * space.width);
@@ -95,6 +90,13 @@ export class User {
                       username: u.username,
                       userAvatar: u.userAvatar,
                     })) ?? [],
+                messages: RoomManager.getInstance()
+                  .messages.get(spaceId)
+                  ?.map((u) => ({
+                    username: u.username,
+                    userAvatar: u.userAvatar,
+                    message: u.message,
+                  })),
               },
             });
             RoomManager.getInstance().broadcast(
@@ -120,10 +122,7 @@ export class User {
             const moveX = parsedData.payload.x;
             const moveY = parsedData.payload.y;
             // check for the element
-            await isElementPresent(
-              moveX * this.spaceWidth + moveY,
-              this.spaceElements
-            );
+            await isElementPresent(moveX, moveY, this.spaceId!);
             // check for the other user
             const index = RoomManager.getInstance()
               .rooms.get(this.spaceId!)
@@ -170,6 +169,33 @@ export class User {
               },
             });
           }
+          break;
+        case "message":
+          RoomManager.getInstance().addMessage(
+            this.spaceId!,
+            this!,
+            parsedData.payload.message
+          );
+          this.send({
+            type: "message",
+            payload: {
+              username: this.username,
+              userAvatar: this.userAvatar,
+              message: parsedData.payload.message,
+            },
+          });
+          RoomManager.getInstance().broadcast(
+            {
+              type: "message",
+              payload: {
+                username: this.username,
+                userAvatar: this.userAvatar,
+                message: parsedData.payload.message,
+              },
+            },
+            this!,
+            this.spaceId!
+          );
           break;
       }
     });

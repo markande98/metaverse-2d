@@ -42,7 +42,7 @@ export const SpaceCard = ({
   return (
     <Card
       onClick={onClick}
-      className="hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+      className="hover:shadow-lg transition-shadow duration-300 cursor-pointer hover:border-4 hover:border-gray-400"
     >
       <CardContent className="px-0">
         {thumbnail ? (
@@ -55,8 +55,13 @@ export const SpaceCard = ({
           />
         )}
       </CardContent>
-      <CardFooter className="flex items-center justify-between p-2">
-        <p className="font-sm text-muted-foreground text-sm">{name}</p>
+      <CardFooter className="flex items-center justify-between p-4">
+        <div className="flex-col items-center justify-center space-y-4">
+          <p className="font-sm text-muted-foreground text-sm">{name}</p>
+          <p className="font-sm text-muted-foreground text-sm">
+            Dimensions: {`${dimensions}`}
+          </p>
+        </div>
         <Trash2 onClick={onDelete} size={20} />
       </CardFooter>
     </Card>

@@ -2,7 +2,9 @@ import { Card } from "@/components/ui/card";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SpaceGrid } from "./space-grid";
 import { handleWebSocketMessage } from "./lib/handle-web-socket-message";
-import { spaceElementsInfo } from "../types";
+import { MessageType, spaceElementsInfo } from "../types";
+import { Messages } from "../message/messages";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const WS_URL = "ws://localhost:3001";
 
@@ -15,6 +17,7 @@ interface SpaceRoomViewProps {
   currentUsername?: string;
   spaceElements: spaceElementsInfo[];
   currentUserAvatar?: string | null;
+  isSpaceOwner: boolean;
 }
 
 export const SpaceRoomView = ({
@@ -22,13 +25,14 @@ export const SpaceRoomView = ({
   token,
   height,
   width,
-  spaceName,
   currentUsername,
   spaceElements,
   currentUserAvatar,
+  isSpaceOwner,
 }: SpaceRoomViewProps) => {
   const wsRef = useRef<WebSocket | null>(null);
   const [users, setUsers] = useState(new Map());
+  const [messages, setMessages] = useState<MessageType[]>([]);
   const [currentUser, setCurrentUser] = useState<{
     x: number;
     y: number;
@@ -53,7 +57,7 @@ export const SpaceRoomView = ({
 
     wsRef.current.onmessage = (event: any) => {
       const message = JSON.parse(event.data);
-      handleWebSocketMessage(message, setCurrentUser, setUsers);
+      handleWebSocketMessage(message, setCurrentUser, setUsers, setMessages);
     };
 
     return () => {
@@ -79,6 +83,21 @@ export const SpaceRoomView = ({
     [currentUser]
   );
 
+  const handleClickMessage = useCallback(
+    (value: string) => {
+      if (!currentUser) return;
+      wsRef.current?.send(
+        JSON.stringify({
+          type: "message",
+          payload: {
+            message: value,
+          },
+        })
+      );
+    },
+    [currentUser]
+  );
+
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
       const key = e.key.toLowerCase();
@@ -88,13 +107,13 @@ export const SpaceRoomView = ({
           handleMove(currentUser.x, Math.max(0, currentUser.y - 1));
           break;
         case "arrowright":
-          handleMove(currentUser.x, Math.min(height, currentUser.y + 1));
+          handleMove(currentUser.x, Math.min(height - 1, currentUser.y + 1));
           break;
         case "arrowup":
           handleMove(Math.max(0, currentUser.x - 1), currentUser.y);
           break;
         case "arrowdown":
-          handleMove(Math.min(width, currentUser.x + 1), currentUser.y);
+          handleMove(Math.min(width - 1, currentUser.x + 1), currentUser.y);
           break;
       }
     };
@@ -105,20 +124,27 @@ export const SpaceRoomView = ({
   }, [currentUser.x, currentUser.y, height, width, handleMove]);
 
   return (
-    <Card className="p-4 w-fit min-h-screen">
-      <div className="space-y-4">
-        <div className="text-sm text-gray-500">Spacename: {spaceName}</div>
-        <SpaceGrid
-          width={width}
-          height={height}
-          currentUserX={currentUser.x}
-          currentUserY={currentUser.y}
-          currentUserName={currentUsername}
-          users={users}
-          spaceElements={spaceElements}
-          currentUserAvatar={currentUserAvatar}
-        />
-      </div>
-    </Card>
+    <div className="flex space-x-4 p-4">
+      <Card className="w-fit h-fit flex items-center justify-center">
+        <ScrollArea className="p-4">
+          <SpaceGrid
+            width={width}
+            height={height}
+            currentUserX={currentUser.x}
+            currentUserY={currentUser.y}
+            currentUserName={currentUsername}
+            users={users}
+            spaceElements={spaceElements}
+            currentUserAvatar={currentUserAvatar}
+            isSpaceOwner={isSpaceOwner}
+          />
+        </ScrollArea>
+      </Card>
+      <Messages
+        messages={messages}
+        handleClickMessage={handleClickMessage}
+        spaceId={spaceId}
+      />
+    </div>
   );
 };

@@ -109,6 +109,12 @@ export type getMapElements = Map & {
   mapElements: mapWithElements[];
 };
 
+export type MessageType = {
+  username: string;
+  userAvatar: string;
+  message: string;
+};
+
 enum roleType {
   User,
   Admin,
