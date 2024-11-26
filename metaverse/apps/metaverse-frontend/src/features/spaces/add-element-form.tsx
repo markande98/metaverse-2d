@@ -1,18 +1,22 @@
-import { useCallback, useState } from "react";
-import { useGetElements } from "./hooks/use-get-elements";
-import { cn } from "@/lib/utils";
-import { CheckCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAddElementModal } from "./hooks/use-add-element-modal";
-import { toast } from "sonner";
 import { customAxios } from "@/lib/api";
+import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
+import { CheckCircle } from "lucide-react";
+import { useCallback, useState } from "react";
+import { toast } from "sonner";
+import { useAddElementModal } from "./hooks/use-add-element-modal";
+import { useGetElements } from "./hooks/use-get-elements";
 
 interface AddElementFormProps {
   spaceId: string;
+  handleUpdateElementMessage: () => void;
 }
 
-export const AddElementForm = ({ spaceId }: AddElementFormProps) => {
+export const AddElementForm = ({
+  spaceId,
+  handleUpdateElementMessage,
+}: AddElementFormProps) => {
   const [activeElement, setActiveElement] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const elements = useGetElements();
@@ -31,12 +35,21 @@ export const AddElementForm = ({ spaceId }: AddElementFormProps) => {
       toast("element added!");
       onClose();
       await queryClient.refetchQueries({ queryKey: ["get-space"] });
+      handleUpdateElementMessage();
     } catch (e) {
       console.log(e);
     } finally {
       setIsLoading(false);
     }
-  }, [onClose, activeElement, data?.x, data?.y, spaceId, queryClient]);
+  }, [
+    onClose,
+    activeElement,
+    data?.x,
+    data?.y,
+    spaceId,
+    queryClient,
+    handleUpdateElementMessage,
+  ]);
 
   return (
     <div className="space-y-4">

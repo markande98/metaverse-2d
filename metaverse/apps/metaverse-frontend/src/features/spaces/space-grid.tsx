@@ -15,6 +15,7 @@ interface SpaceGridProps {
   spaceElements: spaceElementsInfo[];
   currentUserAvatar?: string | null;
   isSpaceOwner: boolean;
+  handleUpdateElementMessage: () => void;
 }
 
 export const SpaceGrid = ({
@@ -27,6 +28,7 @@ export const SpaceGrid = ({
   spaceElements,
   currentUserAvatar,
   isSpaceOwner,
+  handleUpdateElementMessage,
 }: SpaceGridProps) => {
   const { onOpen } = useAddElementModal();
   const queryClient = useQueryClient();
@@ -40,11 +42,12 @@ export const SpaceGrid = ({
           },
         });
         await queryClient.refetchQueries({ queryKey: ["get-space"] });
+        handleUpdateElementMessage();
       } catch (e) {
         console.log(e);
       }
     },
-    [queryClient]
+    [queryClient, handleUpdateElementMessage]
   );
   const renderGrid = () => {
     const otherUsersPos: number[] = [];

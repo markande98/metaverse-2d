@@ -197,6 +197,14 @@ export class User {
             this.spaceId!
           );
           break;
+        case "element-update":
+          RoomManager.getInstance().broadcast(
+            {
+              type: "element-update",
+            },
+            this!,
+            this.spaceId!
+          );
       }
     });
   }

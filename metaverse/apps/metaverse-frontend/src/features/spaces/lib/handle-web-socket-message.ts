@@ -1,7 +1,8 @@
 import { MessageType } from "@/features/types";
+import { QueryClient } from "@tanstack/react-query";
 import React from "react";
 
-export const handleWebSocketMessage = (
+export const handleWebSocketMessage = async (
   message: any,
   setCurrentUser: React.Dispatch<
     React.SetStateAction<{
@@ -10,7 +11,8 @@ export const handleWebSocketMessage = (
     }>
   >,
   setUsers: React.Dispatch<React.SetStateAction<any>>,
-  setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>
+  setMessages: React.Dispatch<React.SetStateAction<MessageType[]>>,
+  queryClient: QueryClient
 ) => {
   switch (message.type) {
     case "space-joined":
@@ -93,6 +95,9 @@ export const handleWebSocketMessage = (
         x: message.payload.x,
         y: message.payload.y,
       });
+      break;
+    case "element-update":
+      await queryClient.refetchQueries({ queryKey: ["get-space"] });
       break;
   }
 };
