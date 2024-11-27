@@ -11,9 +11,6 @@ import { userMiddleWare } from "../../middleware/user";
 import { signInSchema, signUpSchema } from "../../types";
 import { ACCESS_TOKEN, JWT_SECRET, REFRESH_TOKEN } from "../../utils/config";
 import { generateAccessToken } from "../../utils/helper";
-import dotenv from "dotenv";
-
-dotenv.config();
 
 export const router = Router();
 

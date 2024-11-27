@@ -1,7 +1,6 @@
 import { Router } from "express";
 import {
   AddElementSchema,
-  CreateElementSchema,
   createSpaceSchema,
   DeleteElementSchema,
 } from "../../types";

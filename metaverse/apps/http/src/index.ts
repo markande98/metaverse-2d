@@ -8,7 +8,7 @@ import morgan from "morgan";
 const app = express();
 dotenv.config();
 
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -23,5 +23,5 @@ app.use(
 app.use("/api/v1", router);
 
 app.listen(PORT, () => {
-  console.log("Server running....");
+  console.log("Server running....", PORT);
 });
