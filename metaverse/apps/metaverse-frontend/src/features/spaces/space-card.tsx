@@ -46,7 +46,11 @@ export const SpaceCard = ({
     >
       <CardContent className="px-0">
         {thumbnail ? (
-          <img src={thumbnail} alt="thumbnail" />
+          <img
+            src={thumbnail}
+            alt="thumbnail"
+            className="object-cover rounded-t-xl"
+          />
         ) : (
           <img
             src="/images/space.png"

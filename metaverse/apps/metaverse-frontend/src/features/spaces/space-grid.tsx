@@ -4,6 +4,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useCallback } from "react";
 import { spaceElementsInfo } from "../types";
 import { useAddElementModal } from "./hooks/use-add-element-modal";
+import { toast } from "sonner";
 
 interface SpaceGridProps {
   width: number;
@@ -41,6 +42,7 @@ export const SpaceGrid = ({
             id,
           },
         });
+        toast("element deleted!");
         await queryClient.refetchQueries({ queryKey: ["get-space"] });
         handleUpdateElementMessage();
       } catch (e) {

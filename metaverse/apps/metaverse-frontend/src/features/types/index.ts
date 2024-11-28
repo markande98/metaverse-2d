@@ -11,13 +11,13 @@ import { Omit, Pick } from "@prisma/client/runtime/library";
 import z from "zod";
 
 export const signupSchema = z.object({
-  username: z.string(),
+  username: z.string().min(1),
   password: z.string().min(6),
   confirmPassword: z.string().min(6),
 });
 
 export const signinSchema = z.object({
-  username: z.string(),
+  username: z.string().min(1),
   password: z.string().min(6),
 });
 
@@ -36,8 +36,8 @@ export const spaceJoinSchema = z.object({
 
 export const createSpaceSchema = z.object({
   name: z.string(),
-  height: z.number().min(20, "To low!").max(100, "To high!"),
-  width: z.number().min(20, "To low!").max(100, "To high!"),
+  height: z.number().min(20, "To low!").max(40, "To high!"),
+  width: z.number().min(20, "To low!").max(40, "To high!"),
   mapId: z.string().optional(),
 });
 

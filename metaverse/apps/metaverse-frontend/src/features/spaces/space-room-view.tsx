@@ -4,7 +4,7 @@ import { SpaceGrid } from "./space-grid";
 import { handleWebSocketMessage } from "./lib/handle-web-socket-message";
 import { MessageType, spaceElementsInfo } from "../types";
 import { Messages } from "../message/messages";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Modal from "@/components/modal";
 import { AddElementForm } from "./add-element-form";
 import { useAddElementModal } from "./hooks/use-add-element-modal";
@@ -153,7 +153,7 @@ export const SpaceRoomView = ({
         />
       </Modal>
       <div className="flex space-x-4 p-4">
-        <Card className="w-fit h-fit flex items-center justify-center">
+        <Card className="max-w-5xl w-fit h-fit flex items-center justify-center">
           <ScrollArea className="p-4">
             <SpaceGrid
               width={width}
@@ -167,6 +167,7 @@ export const SpaceRoomView = ({
               currentUserAvatar={currentUserAvatar}
               isSpaceOwner={isSpaceOwner}
             />
+            <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </Card>
         <Messages

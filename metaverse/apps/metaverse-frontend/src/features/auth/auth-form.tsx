@@ -5,7 +5,11 @@ import { SignupForm } from "./signup-form";
 
 const AuthForms = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+    <div className="flex flex-col space-y-4 items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex justify-between items-center gap-x-4">
+        <img src="/images/zep.png" alt="Logo" className="h-20 w-20 rounded" />
+        <p className="font-extrabold text-6xl text-blue-600">ZEP</p>
+      </div>
       <Card className="w-full max-w-md">
         <Tabs defaultValue="signin" className="w-full">
           <CardHeader>
