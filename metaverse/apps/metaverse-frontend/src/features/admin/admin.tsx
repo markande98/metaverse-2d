@@ -3,13 +3,14 @@ import { useCurrentUser } from "../auth/hooks/use-current-user";
 import { Sidebar } from "./components/sidebar";
 import { useState } from "react";
 import { MainContent } from "./components/main-content";
+import { roleType } from "../types";
 
 export const Admin = () => {
   const [activeItem, setActiveItem] = useState("element");
   const navigate = useNavigate();
   const user = useCurrentUser();
 
-  if (user?.role === "User") {
+  if (user?.role === roleType.User) {
     navigate("/");
   }
   if (user === null) return null;

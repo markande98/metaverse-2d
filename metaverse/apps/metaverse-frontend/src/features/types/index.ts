@@ -115,7 +115,7 @@ export type MessageType = {
   message: string;
 };
 
-enum roleType {
+export enum roleType {
   User,
   Admin,
 }

@@ -1,5 +1,5 @@
 import { customAxios } from "@/lib/api";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { createContext, PropsWithChildren, useContext } from "react";
 import { z } from "zod";
 import { signinSchema, signupSchema } from "../types";
