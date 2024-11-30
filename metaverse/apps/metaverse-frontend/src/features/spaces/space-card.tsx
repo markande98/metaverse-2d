@@ -27,7 +27,7 @@ export const SpaceCard = ({
   };
 
   const onDelete = useCallback(
-    async (e) => {
+    async (e: any) => {
       e.stopPropagation();
       try {
         await customAxios.delete(`/space/${spaceId}`);

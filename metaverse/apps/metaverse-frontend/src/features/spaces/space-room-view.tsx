@@ -10,8 +10,6 @@ import { AddElementForm } from "./add-element-form";
 import { useAddElementModal } from "./hooks/use-add-element-modal";
 import { useQueryClient } from "@tanstack/react-query";
 
-const WS_URL = "ws://localhost:3001";
-
 interface SpaceRoomViewProps {
   spaceId: string;
   token: string;
@@ -47,7 +45,7 @@ export const SpaceRoomView = ({
     y: 0,
   });
   useEffect(() => {
-    wsRef.current = new WebSocket(WS_URL);
+    wsRef.current = new WebSocket(import.meta.env.VITE_WS_URL);
 
     wsRef.current.onopen = () => {
       wsRef.current?.send(

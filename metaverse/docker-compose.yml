@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+  metaverse-http:
+    image: http
+    container_name: metaverse-http
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./apps/http/.env
+  metaverse-ws:
+    image: ws
+    container_name: metaverse-ws
+    ports:
+      - "3001:3001"
+    restart: always
+    env_file:
+      - ./apps/ws/.env
+  metaverse-frontend:
+    image: metaverse-frontend
+    container_name: metaverse-frontend
+    restart: always
+    depends_on:
+      - metaverse-http
+      - metaverse-ws
+    ports:
+      - "5173:5173"
+    env_file:
+      - ./apps/metaverse-frontend/.env

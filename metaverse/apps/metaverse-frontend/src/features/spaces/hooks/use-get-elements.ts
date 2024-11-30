@@ -1,4 +1,4 @@
-import { Element } from "@prisma/client";
+import { Element } from "@repo/db/client";
 
 import { customAxios } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";

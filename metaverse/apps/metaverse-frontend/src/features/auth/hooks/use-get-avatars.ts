@@ -1,4 +1,4 @@
-import { Avatar } from "@prisma/client";
+import { Avatar } from "@repo/db/client";
 import { customAxios } from "@/lib/api";
 import { useQuery } from "@tanstack/react-query";
 

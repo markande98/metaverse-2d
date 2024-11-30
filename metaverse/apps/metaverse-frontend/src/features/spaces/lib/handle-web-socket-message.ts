@@ -33,7 +33,7 @@ export const handleWebSocketMessage = async (
       setMessages(msg);
       break;
     case "user-joined":
-      setUsers((prev) => {
+      setUsers((prev: any) => {
         const newUsers = new Map(prev);
         if (message.payload.userId) {
           newUsers.set(message.payload.userId, {
@@ -61,7 +61,7 @@ export const handleWebSocketMessage = async (
       });
       break;
     case "movement":
-      setUsers((prev) => {
+      setUsers((prev: any) => {
         const newUsers = new Map(prev);
         const user = newUsers.get(message.payload.userId);
         if (user) {
@@ -84,7 +84,7 @@ export const handleWebSocketMessage = async (
       }));
       break;
     case "user-left":
-      setUsers((prev) => {
+      setUsers((prev: any) => {
         const newUsers = new Map(prev);
         newUsers.delete(message.payload.userId);
         return newUsers;

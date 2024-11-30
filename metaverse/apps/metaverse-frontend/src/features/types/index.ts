@@ -6,8 +6,7 @@ import {
   Space,
   SpaceElements,
   User,
-} from "@prisma/client";
-import { Omit, Pick } from "@prisma/client/runtime/library";
+} from "@repo/db/client";
 import z from "zod";
 
 export const signupSchema = z.object({

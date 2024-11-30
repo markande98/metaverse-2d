@@ -1,5 +1,5 @@
 import { customAxios } from "@/lib/api";
-import { AxiosError, AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { createContext, PropsWithChildren, useContext } from "react";
 import { z } from "zod";
 import { signinSchema, signupSchema } from "../types";
@@ -28,7 +28,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         type: "user",
       });
       return res;
-    } catch (e) {
+    } catch (e: any) {
       throw new Error(e.response.data.message);
     }
   };
@@ -40,7 +40,7 @@ export default function AuthProvider({ children }: AuthProviderProps) {
         password,
       });
       return res;
-    } catch (e) {
+    } catch (e: any) {
       throw new Error(e.response.data.message);
     }
   };
