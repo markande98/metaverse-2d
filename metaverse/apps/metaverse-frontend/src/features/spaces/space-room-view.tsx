@@ -108,14 +108,22 @@ export const SpaceRoomView = ({
     [currentUser]
   );
 
-  const handleUpdateElementMessage = useCallback(() => {
-    if (!currentUser) return;
-    wsRef.current?.send(
-      JSON.stringify({
-        type: "element-update",
-      })
-    );
-  }, [currentUser]);
+  const handleUpdateElementMessage = useCallback(
+    (x?: number, y?: number, isAdd?: boolean) => {
+      if (!currentUser) return;
+      wsRef.current?.send(
+        JSON.stringify({
+          type: "element-update",
+          payload: {
+            x,
+            y,
+            isAdd,
+          },
+        })
+      );
+    },
+    [currentUser]
+  );
 
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {

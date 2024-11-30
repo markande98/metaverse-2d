@@ -1,10 +1,9 @@
-import { WebSocket } from "ws";
-import { RoomManager } from "./RoomManager";
-import { OutgoingMessage } from "./types";
 import { db } from "@repo/db/client";
 import jwt, { JwtPayload } from "jsonwebtoken";
+import { WebSocket } from "ws";
 import { JWT_SECRET } from "./config";
-import { isElementPresent } from "./lib/helper";
+import { RoomManager } from "./RoomManager";
+import { OutgoingMessage } from "./types";
 
 export class User {
   private spaceId?: string;
@@ -32,7 +31,7 @@ export class User {
           const spaceId = parsedData.payload.spaceId;
           const token = parsedData.payload.token;
           try {
-            const user = jwt.verify(token, JWT_SECRET) as JwtPayload;
+            const user = jwt.verify(token, JWT_SECRET!) as JwtPayload;
             let updatedUser = await db.user.findUnique({
               where: {
                 id: user.id,
@@ -67,6 +66,12 @@ export class User {
             }
             this.spaceId = spaceId;
             this.spaceWidth = space.width;
+            space.elements.forEach((val) => {
+              RoomManager.getInstance().addElements(
+                this.spaceId!,
+                val.x * this.spaceWidth + val.y
+              );
+            });
             RoomManager.getInstance().addUser(spaceId, this);
             this.x = Math.floor(Math.random() * space.width);
             this.y = Math.floor(Math.random() * space.width);
@@ -122,7 +127,13 @@ export class User {
             const moveX = parsedData.payload.x;
             const moveY = parsedData.payload.y;
             // check for the element
-            await isElementPresent(moveX, moveY, this.spaceId!);
+            const isElement = RoomManager.getInstance().hasElements(
+              this.spaceId!,
+              moveX * this.spaceWidth + moveY
+            );
+            if (isElement) {
+              throw new Error("Element found!");
+            }
             // check for the other user
             const index = RoomManager.getInstance()
               .rooms.get(this.spaceId!)
@@ -198,6 +209,20 @@ export class User {
           );
           break;
         case "element-update":
+          const x = parsedData.payload.x;
+          const y = parsedData.payload.y;
+          const isAdd = parsedData.payload.isAdd;
+          if (isAdd) {
+            RoomManager.getInstance().addElements(
+              this.spaceId!,
+              x * this.spaceWidth + y
+            );
+          } else {
+            RoomManager.getInstance().removeElements(
+              this.spaceId!,
+              x * this.spaceWidth + y
+            );
+          }
           RoomManager.getInstance().broadcast(
             {
               type: "element-update",

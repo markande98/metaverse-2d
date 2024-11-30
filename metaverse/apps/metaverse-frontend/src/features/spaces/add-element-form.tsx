@@ -10,7 +10,7 @@ import { useGetElements } from "./hooks/use-get-elements";
 
 interface AddElementFormProps {
   spaceId: string;
-  handleUpdateElementMessage: () => void;
+  handleUpdateElementMessage: (x?: number, y?: number, isAdd?: boolean) => void;
 }
 
 export const AddElementForm = ({
@@ -35,7 +35,7 @@ export const AddElementForm = ({
       toast("element added!");
       onClose();
       await queryClient.refetchQueries({ queryKey: ["get-space"] });
-      handleUpdateElementMessage();
+      handleUpdateElementMessage(data?.x, data?.y, true);
     } catch (e) {
       console.log(e);
     } finally {

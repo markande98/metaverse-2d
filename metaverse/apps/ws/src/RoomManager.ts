@@ -7,11 +7,13 @@ export class RoomManager {
     string,
     { username: string; userAvatar: string; message: string }[]
   >;
+  public elements: Map<string, number[]>;
   static instance: RoomManager;
 
   private constructor() {
     this.rooms = new Map();
     this.messages = new Map();
+    this.elements = new Map();
   }
 
   static getInstance() {
@@ -43,6 +45,27 @@ export class RoomManager {
       ...(this.messages.get(spaceId) ?? []),
       userWithMessage,
     ]);
+  }
+
+  public addElements(spaceId: string, val: number) {
+    if (!this.elements.has(spaceId)) {
+      this.elements.set(spaceId, [val]);
+      return;
+    }
+    this.elements.set(spaceId, [...(this.elements.get(spaceId) ?? []), val]);
+  }
+  public removeElements(spaceId: string, val: number) {
+    if (!this.elements.has(spaceId)) return;
+    this.elements.set(
+      spaceId,
+      this.elements.get(spaceId)?.filter((x) => x !== val) ?? []
+    );
+  }
+  public hasElements(spaceId: string, val: number) {
+    if (!this.elements.has(spaceId)) return false;
+    const index = this.elements.get(spaceId)?.findIndex((x) => x === val);
+    if (index !== -1) return true;
+    return false;
   }
   public broadcast(message: OutgoingMessage, user: User, roomId: string) {
     if (!this.rooms.has(roomId)) return;

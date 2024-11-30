@@ -16,7 +16,7 @@ interface SpaceGridProps {
   spaceElements: spaceElementsInfo[];
   currentUserAvatar?: string | null;
   isSpaceOwner: boolean;
-  handleUpdateElementMessage: () => void;
+  handleUpdateElementMessage: (x: number, y: number, isAdd: boolean) => void;
 }
 
 export const SpaceGrid = ({
@@ -35,7 +35,7 @@ export const SpaceGrid = ({
   const queryClient = useQueryClient();
 
   const onDelete = useCallback(
-    async (id?: string) => {
+    async (id?: string, x: number, y: number) => {
       try {
         await customAxios.delete("/space/element", {
           data: {
@@ -44,7 +44,7 @@ export const SpaceGrid = ({
         });
         toast("element deleted!");
         await queryClient.refetchQueries({ queryKey: ["get-space"] });
-        handleUpdateElementMessage();
+        handleUpdateElementMessage(x, y, false);
       } catch (e) {
         console.log(e);
       }
@@ -121,7 +121,7 @@ export const SpaceGrid = ({
             )}
             {isElement && isSpaceOwner && (
               <div
-                onClick={() => onDelete(spaceElement?.id)}
+                onClick={() => onDelete(spaceElement?.id, x, y)}
                 className="flex items-center justify-center"
               >
                 <img
