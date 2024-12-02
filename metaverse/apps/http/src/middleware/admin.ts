@@ -7,7 +7,7 @@ import { NextFunction, Request, Response } from "express";
 export const adminMiddleWare = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const accessToken = req.cookies["accessToken"];
   if (!accessToken) {
@@ -20,7 +20,6 @@ export const adminMiddleWare = async (
   try {
     const decoded = jwt.verify(accessToken, JWT_SECRET) as User;
     if (decoded.role !== "Admin") {
-      console.log("reached-4");
       res.status(403).json({ message: "Unauthorized" });
       return;
     }

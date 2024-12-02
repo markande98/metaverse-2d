@@ -8,7 +8,7 @@ export const Header = () => {
     <header
       className={cn(
         "fixed top-0 left-0 right-0 bg-white z-40",
-        scrolled && "border-b shadow-md"
+        scrolled && "border-b shadow-md",
       )}
     >
       <div className="max-w-7xl mx-auto px-4">

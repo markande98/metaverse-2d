@@ -1,3 +1,5 @@
+/* eslint-disable no-case-declarations */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MessageType } from "@/features/types";
 import { QueryClient } from "@tanstack/react-query";
 import React from "react";

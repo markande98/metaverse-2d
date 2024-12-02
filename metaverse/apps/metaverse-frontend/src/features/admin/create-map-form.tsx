@@ -52,7 +52,7 @@ export const CreateMapForm = () => {
         setIsLoading(false);
       }
     },
-    [onClose, queryClient]
+    [onClose, queryClient],
   );
 
   return (

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { customAxios } from "@/lib/api";
 import { useQueryClient } from "@tanstack/react-query";

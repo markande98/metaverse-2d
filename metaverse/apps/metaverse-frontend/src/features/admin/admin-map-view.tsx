@@ -26,7 +26,7 @@ export const MapView = () => {
         const cellClass = `w-5 h-5 border border-gray-200 flex items-center justify-center`;
         const isElement = elements.includes(x * data.width + y);
         const mapElement = data.mapElements.find(
-          (me) => me.x === x && me.y === y
+          (me) => me.x === x && me.y === y,
         ) as mapWithElements;
         row.push(
           <div key={`${x}-${y}`} className={cellClass}>
@@ -37,13 +37,13 @@ export const MapView = () => {
                 className="w-5 h-5"
               />
             )}
-          </div>
+          </div>,
         );
       }
       grid.push(
         <div key={x} className="flex">
           {row}
-        </div>
+        </div>,
       );
     }
     return grid;

@@ -58,7 +58,7 @@ export class RoomManager {
     if (!this.elements.has(spaceId)) return;
     this.elements.set(
       spaceId,
-      this.elements.get(spaceId)?.filter((x) => x !== val) ?? []
+      this.elements.get(spaceId)?.filter((x) => x !== val) ?? [],
     );
   }
   public hasElements(spaceId: string, val: number) {
@@ -80,7 +80,7 @@ export class RoomManager {
     if (!this.rooms.has(spaceId)) return;
     this.rooms.set(
       spaceId,
-      this.rooms.get(spaceId)?.filter((u) => u.id !== user.id) ?? []
+      this.rooms.get(spaceId)?.filter((u) => u.id !== user.id) ?? [],
     );
   }
 }

@@ -14,7 +14,7 @@ export class User {
     private ws: WebSocket,
     public id: string,
     public username: string,
-    public userAvatar: string | null
+    public userAvatar: string | null,
   ) {
     this.x = 0;
     this.y = 0;
@@ -69,7 +69,7 @@ export class User {
             space.elements.forEach((val) => {
               RoomManager.getInstance().addElements(
                 this.spaceId!,
-                val.x * this.spaceWidth + val.y
+                val.x * this.spaceWidth + val.y,
               );
             });
             RoomManager.getInstance().addUser(spaceId, this);
@@ -116,7 +116,7 @@ export class User {
                 },
               },
               this,
-              this.spaceId!
+              this.spaceId!,
             );
           } catch (e: any) {
             console.log(e.message);
@@ -129,7 +129,7 @@ export class User {
             // check for the element
             const isElement = RoomManager.getInstance().hasElements(
               this.spaceId!,
-              moveX * this.spaceWidth + moveY
+              moveX * this.spaceWidth + moveY,
             );
             if (isElement) {
               throw new Error("Element found!");
@@ -168,7 +168,7 @@ export class User {
                   },
                 },
                 this,
-                this.spaceId!
+                this.spaceId!,
               );
             }
           } catch {
@@ -185,7 +185,7 @@ export class User {
           RoomManager.getInstance().addMessage(
             this.spaceId!,
             this!,
-            parsedData.payload.message
+            parsedData.payload.message,
           );
           this.send({
             type: "message",
@@ -205,7 +205,7 @@ export class User {
               },
             },
             this!,
-            this.spaceId!
+            this.spaceId!,
           );
           break;
         case "element-update":
@@ -215,12 +215,12 @@ export class User {
           if (isAdd) {
             RoomManager.getInstance().addElements(
               this.spaceId!,
-              x * this.spaceWidth + y
+              x * this.spaceWidth + y,
             );
           } else {
             RoomManager.getInstance().removeElements(
               this.spaceId!,
-              x * this.spaceWidth + y
+              x * this.spaceWidth + y,
             );
           }
           RoomManager.getInstance().broadcast(
@@ -228,7 +228,7 @@ export class User {
               type: "element-update",
             },
             this!,
-            this.spaceId!
+            this.spaceId!,
           );
       }
     });
@@ -243,7 +243,7 @@ export class User {
         },
       },
       this,
-      this.spaceId!
+      this.spaceId!,
     );
     RoomManager.getInstance().removeUser(this.spaceId!, this);
   }

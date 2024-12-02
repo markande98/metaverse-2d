@@ -60,7 +60,7 @@ export const AddElementForm = ({
             onClick={() => setActiveElement(element.id)}
             className={cn(
               "flex items-center justify-center cursor-pointer relative",
-              activeElement === element.id && "border-4 border-zinc-500"
+              activeElement === element.id && "border-4 border-zinc-500",
             )}
           >
             <img className="h-20 w-20" src={element.imageUrl} alt="element" />

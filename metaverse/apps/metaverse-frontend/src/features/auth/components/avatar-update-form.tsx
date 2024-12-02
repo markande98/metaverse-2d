@@ -50,7 +50,7 @@ export const AvatarUpdateForm = () => {
         setIsLoading(false);
       }
     },
-    [onClose, queryClient]
+    [onClose, queryClient],
   );
   return (
     <Form {...form}>

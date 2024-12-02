@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Card } from "@/components/ui/card";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { SpaceGrid } from "./space-grid";

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { customAxios } from "@/lib/api";
 import { useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
@@ -35,7 +36,7 @@ export const SpaceGrid = ({
   const queryClient = useQueryClient();
 
   const onDelete = useCallback(
-    async (id?: string, x: number, y: number) => {
+    async (x: number, y: number, id?: string) => {
       try {
         await customAxios.delete("/space/element", {
           data: {
@@ -121,7 +122,7 @@ export const SpaceGrid = ({
             )}
             {isElement && isSpaceOwner && (
               <div
-                onClick={() => onDelete(spaceElement?.id, x, y)}
+                onClick={() => onDelete(x, y, spaceElement?.id)}
                 className="flex items-center justify-center"
               >
                 <img

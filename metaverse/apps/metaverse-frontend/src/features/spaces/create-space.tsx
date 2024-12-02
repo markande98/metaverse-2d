@@ -54,7 +54,7 @@ export const CreateSpace = () => {
         setIsloading(false);
       }
     },
-    [form, onClose, navigate, mapId]
+    [form, onClose, navigate, mapId],
   );
 
   return (

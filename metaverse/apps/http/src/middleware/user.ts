@@ -7,7 +7,7 @@ import { NextFunction, Request, Response } from "express";
 export const userMiddleWare = async (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction,
 ) => {
   const accessToken = req.cookies["accessToken"];
   if (!accessToken) {

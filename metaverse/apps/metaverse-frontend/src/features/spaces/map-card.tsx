@@ -25,7 +25,7 @@ export const MapCard = ({
       onClick={() => setMapId(id)}
       className={cn(
         "hover:shadow-lg transition-shadow duration-300 cursor-pointer",
-        id === activeMapId && "border-gray-400 border-4"
+        id === activeMapId && "border-gray-400 border-4",
       )}
     >
       <CardContent className="flex p-0 items-center justify-center">

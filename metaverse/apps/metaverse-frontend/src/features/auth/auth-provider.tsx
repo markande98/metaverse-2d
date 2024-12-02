@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { customAxios } from "@/lib/api";
 import { AxiosResponse } from "axios";
 import { createContext, PropsWithChildren, useContext } from "react";

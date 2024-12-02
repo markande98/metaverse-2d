@@ -64,7 +64,7 @@ export const createMapSchema = z.object({
       elementId: z.string(),
       x: z.number(),
       y: z.number(),
-    })
+    }),
   ),
 });
 

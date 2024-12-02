@@ -15,7 +15,7 @@ interface MapViewModalProps {
     mapElements: mapWithElements[],
     name: string,
     width: number,
-    height: number
+    height: number,
   ) => void;
   onClose: () => void;
 }
@@ -28,6 +28,6 @@ export const useMapViewModal = create<MapViewModalProps>((set) => ({
     mapElements: mapWithElements[],
     name: string,
     width: number,
-    height: number
+    height: number,
   ) => set({ isOpen: true, data: { mapElements, name, width, height } }),
 }));
