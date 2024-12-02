@@ -14,11 +14,15 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "20"
+
       - name: Install Dependencies
         run: cd metaverse && npm install
 
+      - name: Generate Prisma client
+        run: npm run db:generate
+
       - name: Run lint Checking
-        run: cd metaverse && npm run lint
+        run: npm run lint:check
 
       - name: Run Build
-        run: cd metaverse && npm run build
+        run: npm run build:check

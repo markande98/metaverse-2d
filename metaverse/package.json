@@ -5,7 +5,10 @@
     "build": "turbo build",
     "dev": "turbo dev",
     "lint": "turbo lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "db:generate": "cd metaverse && npx prisma generate",
+    "lint:check": "cd metaverse && npm run lint",
+    "build:check": "cd metaverse && npm run build"
   },
   "devDependencies": {
     "prettier": "^3.2.5",
