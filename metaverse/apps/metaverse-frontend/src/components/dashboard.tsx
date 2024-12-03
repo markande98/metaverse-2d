@@ -12,6 +12,7 @@ export const Dashboard = () => {
       <Modal isOpen={isOpen} onClose={onClose}>
         <AvatarUpdateForm />
       </Modal>
+
       <CardWrapper>
         <Header />
         <Spaces />
