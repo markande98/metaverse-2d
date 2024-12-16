@@ -23,8 +23,8 @@ RUN npm install
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
 
-RUN cd packages/db && npx prisma migrate dev --name init
 RUN cd packages/db && npx prisma generate
+RUN cd packages/db && npx prisma migrate dev --name init
 
 RUN npm run build
 
