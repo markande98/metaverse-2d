@@ -8,6 +8,10 @@ on:
 env:
   DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
   DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
+  JWT_SECRET: ${{ secrets.JWT_SECRET }}
+  ADMIN_USER: ${{ secrets.ADMIN_USER }}
+  ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
   REGISTRY: docker.io
 
 jobs:
@@ -24,24 +28,24 @@ jobs:
             context: ./metaverse
             dockerfile: ./metaverse/apps/metaverse-frontend/Dockerfile
             build-args: |
-              "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+              "DATABASE_URL=${{ env.DATABASE_URL }}"
               "VITE_BACKEND_URL=${{ vars.VITE_BACKEND_URL }}"
               "VITE_WS_URL=${{ vars.VITE_WS_URL }}"
           - name: metaverse-http
             context: ./metaverse
             dockerfile: ./metaverse/apps/http/Dockerfile
             build-args: |
-              "DATABASE_URL=${{ secrets.DATABASE_URL }}"
+              "DATABASE_URL=${{ env.DATABASE_URL }}"
               "HTTP_PORT=${{ vars.HTTP_PORT }}"
-              "JWT_SECRET=${{ secrets.JWT_SECRET }}"
-              "ADMIN_USER=${{ secrets.ADMIN_USER }}"
-              "ADMIN_SECRET=${{ secrets.ADMIN_SECRET }}"
+              "JWT_SECRET=${{ env.JWT_SECRET }}"
+              "ADMIN_USER=${{ env.ADMIN_USER }}"
+              "ADMIN_SECRET=${{ env.ADMIN_SECRET }}"
           - name: metaverse-ws
             context: ./metaverse
             dockerfile: ./metaverse/apps/ws/Dockerfile
             build-args: |
-              "DATABASE_URL=${{ secrets.DATABASE_URL }}"
-              "JWT_SECERT=${{ secrets.JWT_SECRET }}"
+              "DATABASE_URL=${{ env.DATABASE_URL }}"
+              "JWT_SECERT=${{ env.JWT_SECRET }}"
               "WS_PORT=${{ vars.WS_PORT }}"
     steps:
       - name: Checkout repository
