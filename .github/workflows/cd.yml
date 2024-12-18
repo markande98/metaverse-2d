@@ -31,8 +31,8 @@ jobs:
           file: ./metaverse/apps/metaverse-frontend/Dockerfile
           push: true
           tags: gauravbpit1998922/metaverse-frontend:latest
-          build-args:
-            DATABASE_URL: ${{secrets.DATABASE_URL}}
+          build-args: |
+            "DATABASE_URL=${{ secrets.DATABASE_URL }}"
 
       - name: Verify Pushed Image
         run: docker pull gauravbpit1998922/metaverse-frontend:latest

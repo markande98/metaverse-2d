@@ -1,5 +1,3 @@
-ARG DATABASE_URL
-
 FROM node:18-alpine AS base
 
 
@@ -25,6 +23,7 @@ RUN npm install
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
 
+ARG DATABASE_URL
 ENV DATABASE_URL=${DATABASE_URL}
 
 RUN cd packages/db && npx prisma generate
