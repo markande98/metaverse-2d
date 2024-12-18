@@ -35,4 +35,4 @@ jobs:
             DATABASE_URL=${{secrets.DATABASE_URL}}
 
       - name: Verify Pushed Image
-        run: docker pull gauravbpit1998922/metaverse-frontend:latest:latest
+        run: docker pull gauravbpit1998922/metaverse-frontend:latest
