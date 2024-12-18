@@ -11,8 +11,6 @@ env:
 
 jobs:
   build-and-push:
-    environment:
-      name: Development
     runs-on: ubuntu-latest
     steps:
       - name: Check Out Repo
