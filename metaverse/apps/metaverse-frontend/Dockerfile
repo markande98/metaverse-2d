@@ -25,7 +25,7 @@ RUN npm install
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
 
-ENV DATABASE_URL=$DATABASE_URL
+ENV DATABASE_URL=${DATABASE_URL}
 
 RUN cd packages/db && npx prisma generate
 RUN cd packages/db && npx prisma migrate deploy
