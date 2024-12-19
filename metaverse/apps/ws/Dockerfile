@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM node:20-alpine3.17 as base
 
 
 FROM base AS builder
@@ -22,6 +22,14 @@ RUN npm install
 
 # Build the project and its dependencies
 COPY --from=builder /app/out/full/ .
+
+ARG DATABASE_URL
+ARG JWT_SECRET
+ARG WS_PORT
+
+ENV DATABASE_URL=${DATABASE_URL}
+ENV JWT_SECRET=${JWT_SECRET}
+ENV WS_PORT=${WS_PORT}
 
 RUN cd packages/db && npx prisma generate
 RUN cd packages/db && npx prisma migrate deploy

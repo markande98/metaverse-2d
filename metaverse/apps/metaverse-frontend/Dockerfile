@@ -24,7 +24,12 @@ RUN npm install
 COPY --from=builder /app/out/full/ .
 
 ARG DATABASE_URL
+ARG VITE_BACKEND_URL
+ARG VITE_WS_URL
+
 ENV DATABASE_URL=${DATABASE_URL}
+ENV VITE_BACKEND_URL=${VITE_BACKEND_URL}
+ENV VITE_WS_URL=${VITE_WS_URL}
 
 RUN cd packages/db && npx prisma generate
 RUN cd packages/db && npx prisma migrate deploy
