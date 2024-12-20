@@ -10,12 +10,25 @@ dotenv.config();
 
 const PORT = Number(process.env.HTTP_PORT);
 
+const allowedOrigins = [
+  "http://metaverse-frontend:5173",
+  "http://13.201.131.151:5173",
+];
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(
   cors({
-    origin: "http://metaverse-frontend:5173",
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
