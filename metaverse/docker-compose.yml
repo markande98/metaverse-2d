@@ -2,25 +2,31 @@ version: "3.8"
 
 services:
   metaverse-http:
-    image: http
+    image: gauravbpit1998922/metaverse-http:latest
     container_name: metaverse-http
     restart: always
+    networks:
+      - app_network
     ports:
       - "3000:3000"
     env_file:
       - ./apps/http/.env
   metaverse-ws:
-    image: ws
+    image: gauravbpit1998922/metaverse-ws:latest
     container_name: metaverse-ws
     ports:
       - "3001:3001"
     restart: always
+    networks:
+      - app_network
     env_file:
       - ./apps/ws/.env
   metaverse-frontend:
-    image: metaverse-frontend
+    image: gauravbpit1998922/metaverse-frontend:latest
     container_name: metaverse-frontend
     restart: always
+    networks:
+      - app_network
     depends_on:
       - metaverse-http
       - metaverse-ws
@@ -28,3 +34,7 @@ services:
       - "5173:5173"
     env_file:
       - ./apps/metaverse-frontend/.env
+
+networks:
+  app_network:
+    driver: bridge
