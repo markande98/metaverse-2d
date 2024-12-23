@@ -13,6 +13,7 @@ const PORT = Number(process.env.HTTP_PORT);
 const allowedOrigins = [
   "http://metaverse-frontend:5173",
   "http://13.201.131.151:5173",
+  "http://localhost:5173",
 ];
 
 app.use(express.json());
