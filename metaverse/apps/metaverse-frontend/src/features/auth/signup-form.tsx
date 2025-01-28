@@ -106,7 +106,12 @@ export const SignupForm = () => {
         </div>
         <FormError message={error} />
         <FormSuccess message={succes} />
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button
+          variant="blue"
+          type="submit"
+          className="w-full"
+          disabled={isLoading}
+        >
           sign up
         </Button>
       </form>

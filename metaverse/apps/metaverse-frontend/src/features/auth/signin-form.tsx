@@ -58,7 +58,7 @@ export const SigninForm = () => {
                 <FormControl>
                   <Input
                     {...field}
-                    placeholder="enter your username"
+                    placeholder="Enter your username"
                     disabled={isLoading}
                   />
                 </FormControl>
@@ -84,7 +84,12 @@ export const SigninForm = () => {
           />
         </div>
         <FormError message={error} />
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button
+          variant="blue"
+          type="submit"
+          className="w-full"
+          disabled={isLoading}
+        >
           sign in
         </Button>
       </form>
