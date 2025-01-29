@@ -7,27 +7,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, LogOut } from "lucide-react";
-import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LogOut, Shield, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
-import { useCurrentUser } from "../hooks/use-current-user";
 import { useAuth } from "../auth-provider";
 import { useAvatarModal } from "../hooks/use-avatar-update";
+import { useCurrentUser } from "../hooks/use-current-user";
 
 export const UserProfile = () => {
-  const [open, setOpen] = useState(false);
   const data = useCurrentUser();
   const { handleLogout } = useAuth();
   const navigate = useNavigate();
   const { onOpen } = useAvatarModal();
 
   const firstLetter = data?.username.toUpperCase()[0];
-
-  const handleOpenChange = () => {
-    setOpen((open) => !open);
-  };
 
   const onSignOut = async () => {
     try {
@@ -40,49 +34,31 @@ export const UserProfile = () => {
   };
 
   return (
-    <DropdownMenu onOpenChange={handleOpenChange}>
+    <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button
-          size="sm"
-          className="flex border-none justify-between shadow-none"
-          variant="outline"
-        >
-          {data?.avatar?.imageUrl ? (
-            <img
-              src={data.avatar.imageUrl}
-              alt="user-avatar"
-              className="h-8 w-8 rounded-full"
-            />
-          ) : (
-            <div className="bg-blue-300 rounded-full h-8 w-8 flex justify-center items-center">
-              {firstLetter}
-            </div>
-          )}
-          <span>{open ? <ChevronDown /> : <ChevronUp />}</span>
-        </Button>
+        <div className="h-11 w-11 flex items-center justify-center rounded-full bg-white">
+          <Avatar className="h-9 w-9 cursor-pointer hover:opacity-80 transition-opacity">
+            <AvatarImage src={data?.avatar.imageUrl ?? ""} />
+            <AvatarFallback>{firstLetter}</AvatarFallback>
+          </Avatar>
+        </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
+      <DropdownMenuContent className="w-fit" align="center">
         <DropdownMenuLabel>{data?.username}</DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-muted-foreground text-xs">
-          {data?.role}
-        </DropdownMenuItem>
-        <DropdownMenuItem className="text-muted-foreground text-xs">
-          spaces
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => onOpen()}
-          className="text-muted-foreground text-xs cursor-pointer"
-        >
-          Avatar update
+        <DropdownMenuItem>
+          <Shield className="mr-2 h-4 w-4" />
+          <span>{data?.role}</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={onSignOut}
-          className="flex items-center gap-x-2 cursor-pointer"
-        >
-          <LogOut />
-          <p className="font-bold text-red-400">Sign out</p>
+        <DropdownMenuItem onClick={() => onOpen()}>
+          <User className="mr-2 h-4 w-4" />
+          <span>Avatar</span>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={onSignOut} className="text-destructive">
+          <LogOut className="mr-2 h-4 w-4" />
+          <span>Log out</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

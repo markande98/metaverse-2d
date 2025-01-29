@@ -31,7 +31,7 @@ export const Spaces = () => {
         <div className="flex items-center justify-between gap-x-2">
           <Button
             variant="outline"
-            className="text-blue-500 hover:bg-zinc-100 hover:text-blue-500"
+            className="text-slate-700 hover:bg-zinc-100 hover:text-blue-500"
             onClick={() => spaceJoinModal.onOpen()}
           >
             <div className="flex items-center gap-x-1">
@@ -39,7 +39,7 @@ export const Spaces = () => {
               <p>Enter with code</p>
             </div>
           </Button>
-          <Button variant="blue" onClick={() => createSpaceModal.onOpen()}>
+          <Button variant="slate" onClick={() => createSpaceModal.onOpen()}>
             <div className="flex items-center gap-x-1">
               <Plus />
               <p>Create space</p>

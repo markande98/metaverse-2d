@@ -1,7 +1,7 @@
-import { Boxes } from "lucide-react";
 import { useState } from "react";
 import { SigninForm } from "./signin-form";
 import { SignupForm } from "./signup-form";
+import { MetaVerseLogo } from "@/components/metaverse-logo";
 
 const AuthForms = () => {
   const [isSign, setIsSign] = useState(true);
@@ -9,10 +9,7 @@ const AuthForms = () => {
     <div className="min-h-screen flex">
       <div className="w-1/2 flex items-center justify-center p-12 bg-gradient-to-b from-pink-50 to-pink-100">
         <div className="max-w-md w-full">
-          <div className="flex items-center gap-3 mb-8">
-            <Boxes className="h-20 w-20 text-indigo-600" />
-            <h1 className="text-6xl font-bold text-gray-900">MetaVerse</h1>
-          </div>
+          <MetaVerseLogo />
           {isSign && <SigninForm />}
           {!isSign && <SignupForm />}
           <p className="mt-6 text-center text-sm text-gray-600">
